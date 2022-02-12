@@ -8,7 +8,7 @@ index 1f35605..e0c60fa 100644
          return module[exportName];
      }
      return import(
-+    /* vite-ignore */
++    /* @vite-ignore */
      /* webpackInclude: /\.entry\.js$/ */
      /* webpackExclude: /\.system\.entry\.js$/ */
      /* webpackMode: "lazy" */
