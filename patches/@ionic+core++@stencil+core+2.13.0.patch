@@ -1,0 +1,19 @@
+https://github.com/ionic-team/ionic-framework/issues/23823#issuecomment-1024802078
+
+diff --git a/node_modules/@ionic/core/node_modules/@stencil/core/internal/client/index.js b/node_modules/@ionic/core/node_modules/@stencil/core/internal/client/index.js
+index 1f35605..e0c60fa 100644
+--- a/node_modules/@ionic/core/node_modules/@stencil/core/internal/client/index.js
++++ b/node_modules/@ionic/core/node_modules/@stencil/core/internal/client/index.js
+@@ -2925,6 +2925,7 @@ const loadModule = (cmpMeta, hostRef, hmrVersionId) => {
+         return module[exportName];
+     }
+     return import(
++    /* vite-ignore */
+     /* webpackInclude: /\.entry\.js$/ */
+     /* webpackExclude: /\.system\.entry\.js$/ */
+     /* webpackMode: "lazy" */
+@@ -3029,3 +3030,4 @@ const Build = {
+ };
+ export { BUILD, Env, NAMESPACE } from '@stencil/core/internal/app-data';
+ export { Build, CSS, Context, Fragment, H, H as HTMLElement, Host, STENCIL_DEV_MODE, addHostEventListeners, bootstrapLazy, cmpModules, connectedCallback, consoleDevError, consoleDevInfo, consoleDevWarn, consoleError, createEvent, defineCustomElement, disconnectedCallback, doc, forceModeUpdate, forceUpdate, getAssetPath, getConnect, getContext, getElement, getHostRef, getMode, getRenderingRef, getValue, h, insertVdomAnnotations, isMemberInElement, loadModule, modeResolutionChain, nextTick, parsePropertyValue, plt, postUpdateComponent, promiseResolve, proxyComponent, proxyCustomElement, readTask, registerHost, registerInstance, renderVdom, setAssetPath, setErrorHandler, setMode, setPlatformHelpers, setPlatformOptions, setValue, styles, supportsConstructibleStylesheets, supportsListenerOptions, supportsShadow, win, writeTask };
++

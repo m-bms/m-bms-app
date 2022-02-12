@@ -1,0 +1,7 @@
+{
+  "name": "m-bms",
+  "type": "custom",
+  "integrations": {
+    "capacitor": {}
+  }
+}
