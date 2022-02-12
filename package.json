@@ -5,8 +5,9 @@
   "scripts": {
     "postinstall": "patch-package",
     "prepare": "husky install",
-    "dev:web": "vite --host",
+    "dev:web": "cross-env MODE=web vite --host",
     "dev:android": "ionic cap run android -l",
+    "build:web": "cross-env MODE=web vite build",
     "build:android": "ionic cap build android",
     "ionic:serve": "vite",
     "ionic:build": "vite build"
@@ -31,6 +32,7 @@
     "@capacitor/cli": "^3.4.1",
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
+    "cross-env": "^7.0.3",
     "husky": "^7.0.0",
     "patch-package": "^6.4.7",
     "prettier": "^2.5.1",
