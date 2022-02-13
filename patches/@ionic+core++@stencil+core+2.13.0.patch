@@ -1,7 +1,7 @@
 https://github.com/ionic-team/ionic-framework/issues/23823#issuecomment-1024802078
 
 diff --git a/node_modules/@ionic/core/node_modules/@stencil/core/internal/client/index.js b/node_modules/@ionic/core/node_modules/@stencil/core/internal/client/index.js
-index 1f35605..e0c60fa 100644
+index 1f35605..6ff47d6 100644
 --- a/node_modules/@ionic/core/node_modules/@stencil/core/internal/client/index.js
 +++ b/node_modules/@ionic/core/node_modules/@stencil/core/internal/client/index.js
 @@ -2925,6 +2925,7 @@ const loadModule = (cmpMeta, hostRef, hmrVersionId) => {
