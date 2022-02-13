@@ -13,9 +13,10 @@ const regex = /^( *\/\/\ *@mode: *)(.*)(\n *)(.*)$/gm
 
 export const pluginStripMode = (): Plugin => ({
   name: 'strip-mode',
-  enforce: 'pre',
-  transform(ctx) {
-    return ctx.replaceAll(regex, (match, pre1, mode, pre2, line) => {
+  transform(code, id) {
+    if (!/\.tsx?$/.test(id)) return
+
+    return code.replaceAll(regex, (match, pre1, mode, pre2, line) => {
       return mode === MODE ? match : pre1 + mode + pre2 + '// ' + line
     })
   },
