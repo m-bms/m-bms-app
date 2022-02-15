@@ -5,7 +5,8 @@
     "moduleResolution": "node",
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "types": ["vite/client", "./src/vite-plugins/ionic-elements"],
+    "allowSyntheticDefaultImports": true,
+    "types": ["vite/client"],
     "strict": true,
     "paths": {
       "/src/*": ["./src/*"]
