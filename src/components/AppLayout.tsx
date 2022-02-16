@@ -1,12 +1,17 @@
 import { cubeOutline, searchOutline, settingsOutline } from 'ionicons/icons'
-import { defineElement } from '../utils/solid-element'
+import { app } from '../states/app-state'
+import { defineElement } from '../utils/custom-element'
 import { AppSettings } from './AppSettings'
 import { AvailableDevices } from './AvailableDevices'
 import { ConnectedDevices } from './ConnectedDevices'
 
 export const AppLayout = defineElement('app-layout', () => {
   return (
-    <ion-tabs>
+    <ion-tabs
+      on:ionTabsDidChange={event => {
+        app.selectedTab = event.detail.tab
+      }}
+    >
       <ion-tab tab={ConnectedDevices} component={ConnectedDevices} />
       <ion-tab tab={AvailableDevices} component={AvailableDevices} />
       <ion-tab tab={AppSettings} component={AppSettings} />

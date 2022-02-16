@@ -5,11 +5,12 @@
   "scripts": {
     "postinstall": "patch-package",
     "prepare": "husky install",
-    "web:dev": "cross-env MODE=web vite --host",
-    "web:build": "cross-env MODE=web vite build",
-    "android:dev": "ionic cap run android -l --external",
-    "android:build": "ionic cap build android",
-    "ionic:serve": "vite --host",
+    "dev:web": "vite --host",
+    "build:web": "cross-env VITE_RELEASE=true vite build",
+    "dev:android": "ionic cap run android -l --external",
+    "build:android:test": "ionic cap build android",
+    "build:android:release": "cross-env VITE_RELEASE=true ionic cap build android",
+    "ionic:serve": "vite",
     "ionic:build": "vite build"
   },
   "dependencies": {

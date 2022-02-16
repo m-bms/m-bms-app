@@ -16,6 +16,7 @@ export const App = () => {
       </ion-router>
 
       <ion-nav></ion-nav>
+      <ion-loading />
     </ion-app>
   )
 }
