@@ -16,7 +16,7 @@ export const setupLocal = <T extends Record<string, unknown>>(
     if (!props.length) local = state
     else props.forEach(prop => (local[prop] = state[prop]))
 
-    localStorage.setItem(key, JSON.stringify(state))
+    localStorage.setItem(key, JSON.stringify(local))
   }
 
   if (saveFuncs.has(key)) throw Error(`Key existed [${key}]`)
