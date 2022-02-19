@@ -1,9 +1,7 @@
 declare global {
   interface ImportMetaEnv {
-    readonly VITE_RELEASE?: 'true'
+    readonly VITE_APP_VERSION: string
   }
 }
 
-export const isRelease = () => import.meta.env.VITE_BUILD === 'true'
-
-export const isDev = () => import.meta.env.DEV
+export const appVersion = import.meta.env.VITE_APP_VERSION

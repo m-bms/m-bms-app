@@ -1,9 +1,11 @@
-import { render } from 'solid-js/web'
+import '@ionic/react/css/ionic.bundle.css'
+import ReactDom from 'react-dom'
 import { App } from './components/App'
-import { initializeIonicElements } from './ionic/initialize-elements'
-import { app } from './states/app-state'
+import { findDevice } from './components/FindDevice.state'
+import { settings } from './components/Settings.state'
+import './main.scss'
 
-initializeIonicElements()
-app.initialize()
+findDevice.setup()
+settings.setup()
 
-render(() => <App />, document.body)
+ReactDom.render(<App />, document.getElementById('app'))

@@ -1,7 +1,8 @@
+import pluginReact from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
-import pluginSolid from 'vite-plugin-solid'
-import { pluginIonicElements } from './src/ionic/vite-plugin-elements'
+
+process.env.VITE_APP_VERSION = process.env.npm_package_version
 
 export default defineConfig({
-  plugins: [pluginIonicElements(), pluginSolid()],
+  plugins: [pluginReact()],
 })
