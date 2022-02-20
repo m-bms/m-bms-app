@@ -1,49 +1,27 @@
 {
-  "name": "m-bms",
-  "private": true,
-  "version": "0.0.0",
+  "name": "m-bms-app",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "postinstall": "patch-package",
-    "prepare": "husky install",
-    "dev:web": "vite --host",
-    "dev:android": "ionic cap run android -l",
-    "build:android": "ionic cap build android",
-    "ionic:serve": "vite",
-    "ionic:build": "vite build"
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
   },
   "dependencies": {
-    "@awesome-cordova-plugins/ble": "^5.39.0",
-    "@awesome-cordova-plugins/bluetooth-le": "^5.39.0",
-    "@awesome-cordova-plugins/core": "^5.39.0",
-    "@capacitor/android": "3.4.1",
-    "@capacitor/app": "^1.1.0",
-    "@capacitor/core": "^3.4.1",
-    "@capacitor/haptics": "^1.1.4",
-    "@capacitor/keyboard": "^1.2.2",
-    "@capacitor/status-bar": "^1.0.8",
-    "@emotion/css": "^11.7.1",
-    "@ionic/core": "^6.0.7",
-    "cordova-plugin-ble-central": "^1.4.1",
-    "cordova-plugin-bluetoothle": "^6.6.1",
-    "solid-js": "^1.3.7"
+    "expo": "~44.0.0",
+    "expo-status-bar": "~1.2.0",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-native": "0.64.3",
+    "react-native-web": "0.17.1"
   },
   "devDependencies": {
-    "@capacitor/cli": "^3.4.1",
-    "@commitlint/cli": "^16.1.0",
-    "@commitlint/config-conventional": "^16.0.0",
-    "husky": "^7.0.0",
-    "patch-package": "^6.4.7",
-    "prettier": "^2.5.1",
-    "typescript": "^4.5.5",
-    "vite": "^2.8.0",
-    "vite-plugin-solid": "^2.2.5"
+    "@babel/core": "^7.12.9",
+    "@types/react": "~17.0.21",
+    "@types/react-native": "~0.64.12",
+    "typescript": "~4.3.5"
   },
-  "prettier": {
-    "arrowParens": "avoid",
-    "semi": false,
-    "singleQuote": true
-  },
-  "commitlint": {
-    "extends": "@commitlint/config-conventional"
-  }
+  "private": true
 }
