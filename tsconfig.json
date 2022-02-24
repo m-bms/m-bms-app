@@ -3,9 +3,9 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js",
-    "types": ["vite/client"],
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
+    "types": ["vite/client", "unplugin-icons/types/react"],
     "strict": true
   }
 }

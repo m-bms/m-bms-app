@@ -1,6 +1,13 @@
 import { defineConfig } from 'vite'
-import pluginSolid from 'vite-plugin-solid'
+import pluginReact from '@vitejs/plugin-react'
+import pluginIcons from 'unplugin-icons/vite'
 
 export default defineConfig({
-  plugins: [pluginSolid()],
+  plugins: [
+    pluginReact(),
+    pluginIcons({
+      compiler: 'jsx',
+      jsx: 'react',
+    }),
+  ],
 })
