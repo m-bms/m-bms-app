@@ -1,5 +1,4 @@
 import {
-  Alert,
   Button,
   Divider,
   List,
@@ -7,43 +6,27 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   ListSubheader,
-  MenuItem,
-  Portal,
-  Select,
-  Snackbar,
   Typography,
 } from '@mui/material'
 import { useAtom } from 'jotai'
-import { atomWithStorage, RESET } from 'jotai/utils'
-import { useState } from 'react'
-import { appAlertAtom } from './AppAlert'
-import { appTabAtom } from './AppFooter'
-import { appHeaderAtom } from './AppHeader'
-import { SwitchAndroid12 } from './SwitchAndroid12'
-
-export enum ThemeMode {
-  AUTO = 'auto',
-  LIGHT = 'light',
-  DARK = 'dark',
-}
-
-export const themeModeAtom = atomWithStorage('theme-mode', ThemeMode.DARK)
+import { RESET } from 'jotai/utils'
+import { themeModeAtom } from '../App'
+import { appAlertAtom } from '../AppAlert'
+import { Header } from './Header'
+import { IconArrowDropDown } from '/src/components/IconArrowDropDown'
+import { SelectRadio } from '/src/components/SelectRadio'
+import { SwitchAndroid12 } from '/src/components/SwitchAndroid12'
+import { ThemeMode } from '/src/utils/theme'
 
 export const TabSettings = () => {
   const [themeMode, setThemeMode] = useAtom(themeModeAtom)
-  const [appHeader] = useAtom(appHeaderAtom)
   const [, setAppAlert] = useAtom(appAlertAtom)
 
   return (
     <>
-      <Portal container={appHeader}>
-        <Typography variant="h6" children="Settings" />
-      </Portal>
-      <List
-        sx={{
-          '.MuiListItem-root': { alignItems: 'baseline' },
-        }}
-      >
+      <Header />
+
+      <List sx={{ '.MuiListItem-root': { alignItems: 'baseline' } }}>
         <ListSubheader disableSticky children="App" />
 
         <ListItem>
@@ -62,21 +45,25 @@ export const TabSettings = () => {
         <ListItem>
           <ListItemText>Theme</ListItemText>
           <ListItemSecondaryAction>
-            <Select
-              size="small"
-              sx={{
-                fontSize: '0.8125rem',
-                fieldset: {
-                  borderWidth: '1px !important',
-                },
-              }}
+            <SelectRadio
+              title="Select Theme"
+              options={[
+                { value: ThemeMode.AUTO, label: 'Auto' },
+                { value: ThemeMode.LIGHT, label: 'Light' },
+                { value: ThemeMode.DARK, label: 'Dark' },
+              ]}
               value={themeMode}
-              onChange={event => setThemeMode(event.target.value as ThemeMode)}
-            >
-              <MenuItem value={ThemeMode.AUTO} children="Auto" />
-              <MenuItem value={ThemeMode.LIGHT} children="Light" />
-              <MenuItem value={ThemeMode.DARK} children="Dark" />
-            </Select>
+              onChange={setThemeMode}
+              trigger={openDialog => (
+                <Button
+                  size="small"
+                  variant="outlined"
+                  endIcon={<IconArrowDropDown />}
+                  onClick={openDialog}
+                  children={themeMode}
+                />
+              )}
+            />
           </ListItemSecondaryAction>
         </ListItem>
 
@@ -100,7 +87,7 @@ export const TabSettings = () => {
               onClick={() => {
                 setThemeMode(RESET)
                 setAppAlert({
-                  open: true,
+                  visible: true,
                   severity: 'success',
                   message: 'Cache cleared',
                 })

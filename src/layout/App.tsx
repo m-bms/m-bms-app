@@ -1,12 +1,15 @@
 import { CssBaseline, Stack, ThemeProvider, useMediaQuery } from '@mui/material'
 import { useAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
-import { createTheme } from '../utils/theme'
+import { createTheme, ThemeMode } from '../utils/theme'
 import { AppAlert } from './AppAlert'
+import { AppBanner } from './AppBanner'
 import { AppBody } from './AppBody'
 import { AppFooter } from './AppFooter'
 import { AppHeader } from './AppHeader'
-import { themeModeAtom } from './TabSettings'
+
+export const themeModeAtom = atomWithStorage('theme-mode', ThemeMode.DARK)
 
 export const App = () => {
   const [themeMode] = useAtom(themeModeAtom)
@@ -34,6 +37,7 @@ export const App = () => {
         <AppFooter />
       </Stack>
       <AppAlert />
+      <AppBanner />
     </ThemeProvider>
   )
 }

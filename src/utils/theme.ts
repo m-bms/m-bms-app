@@ -1,6 +1,11 @@
 import { createTheme as _createTheme } from '@mui/material'
 import { grey } from '@mui/material/colors'
-import { ThemeMode } from '../components/TabSettings'
+
+export enum ThemeMode {
+  AUTO = 'auto',
+  LIGHT = 'light',
+  DARK = 'dark',
+}
 
 export const createTheme = (themeMode: ThemeMode, preferDark: boolean) => {
   return _createTheme({
