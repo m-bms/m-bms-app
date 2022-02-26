@@ -1,13 +1,13 @@
-import { atomWithStorage } from 'jotai/utils'
+import { atomWithStorage } from "jotai/utils";
 
 export enum FindDeviceSort {
-  ASCENDING = 'ascending',
-  DESCENDING = 'descending',
-  OLDEST = 'oldest',
-  NEWEST = 'newest',
+  ASCENDING = "ascending",
+  DESCENDING = "descending",
+  OLDEST = "oldest",
+  NEWEST = "newest",
 }
 
 export const findDeviceSortAtom = atomWithStorage(
-  'find-device-sort',
+  "find-device-sort",
   FindDeviceSort.ASCENDING
-)
+);

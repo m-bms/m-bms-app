@@ -40,11 +40,6 @@
     "unplugin-icons": "^0.13.2",
     "vite": "^2.8.0"
   },
-  "prettier": {
-    "arrowParens": "avoid",
-    "semi": false,
-    "singleQuote": true
-  },
   "commitlint": {
     "extends": "@commitlint/config-conventional"
   }

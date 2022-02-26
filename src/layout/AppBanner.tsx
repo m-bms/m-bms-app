@@ -1,23 +1,23 @@
-import { Box, Grow, Stack, Typography, useTheme } from '@mui/material'
-import { grey } from '@mui/material/colors'
-import { atom, useAtom } from 'jotai'
-import { SVGProps } from 'react'
+import { Box, Grow, Stack, Typography, useTheme } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import { atom, useAtom } from "jotai";
+import { SVGProps } from "react";
 
 type AppBannerAtom = {
-  open?: boolean
-  icon?: (props: SVGProps<SVGSVGElement>) => JSX.Element
-  iconX?: number
-  message?: string
-  action?: JSX.Element
-}
+  open?: boolean;
+  icon?: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+  iconX?: number;
+  message?: string;
+  action?: JSX.Element;
+};
 
-export const appBannerAtom = atom<AppBannerAtom>({})
+export const appBannerAtom = atom<AppBannerAtom>({});
 
 export const AppBanner = () => {
-  const [banner] = useAtom(appBannerAtom)
+  const [banner] = useAtom(appBannerAtom);
 
-  const theme = useTheme()
-  const color = grey[theme.palette.mode === 'dark' ? 600 : 500]
+  const theme = useTheme();
+  const color = grey[theme.palette.mode === "dark" ? 600 : 500];
 
   return (
     <Grow in={banner.open} timeout={theme.transitions.duration.enteringScreen}>
@@ -26,8 +26,8 @@ export const AppBanner = () => {
           <banner.icon
             color={color}
             style={{
-              position: 'absolute',
-              top: '-110px',
+              position: "absolute",
+              top: "-110px",
               left: `${(banner.iconX ?? 0) - 50}px`,
             }}
             width="100px"
@@ -47,5 +47,5 @@ export const AppBanner = () => {
         <Box position="absolute" top="80px" children={banner.action} />
       </Stack>
     </Grow>
-  )
-}
+  );
+};

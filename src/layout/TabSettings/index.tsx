@@ -7,26 +7,26 @@ import {
   ListItemText,
   ListSubheader,
   Typography,
-} from '@mui/material'
-import { useAtom } from 'jotai'
-import { RESET } from 'jotai/utils'
-import { themeModeAtom } from '../App'
-import { appAlertAtom } from '../AppAlert'
-import { Header } from './Header'
-import { IconArrowDropDown } from '/src/components/IconArrowDropDown'
-import { SelectRadio } from '/src/components/SelectRadio'
-import { SwitchAndroid12 } from '/src/components/SwitchAndroid12'
-import { ThemeMode } from '/src/utils/theme'
+} from "@mui/material";
+import { useAtom } from "jotai";
+import { RESET } from "jotai/utils";
+import { themeModeAtom } from "../App";
+import { appToastAtom } from "../AppToast";
+import { Header } from "./Header";
+import { IconArrowDropDown } from "/src/components/IconArrowDropDown";
+import { SelectRadio } from "/src/components/SelectRadio";
+import { SwitchAndroid12 } from "/src/components/SwitchAndroid12";
+import { ThemeMode } from "/src/utils/theme";
 
 export const TabSettings = () => {
-  const [themeMode, setThemeMode] = useAtom(themeModeAtom)
-  const [, setAppAlert] = useAtom(appAlertAtom)
+  const [themeMode, setThemeMode] = useAtom(themeModeAtom);
+  const [, setAppAlert] = useAtom(appToastAtom);
 
   return (
     <>
       <Header />
 
-      <List sx={{ '.MuiListItem-root': { alignItems: 'baseline' } }}>
+      <List sx={{ ".MuiListItem-root": { alignItems: "baseline" } }}>
         <ListSubheader disableSticky children="App" />
 
         <ListItem>
@@ -48,13 +48,13 @@ export const TabSettings = () => {
             <SelectRadio
               title="Select Theme"
               options={[
-                { value: ThemeMode.AUTO, label: 'Auto' },
-                { value: ThemeMode.LIGHT, label: 'Light' },
-                { value: ThemeMode.DARK, label: 'Dark' },
+                { value: ThemeMode.AUTO, label: "Auto" },
+                { value: ThemeMode.LIGHT, label: "Light" },
+                { value: ThemeMode.DARK, label: "Dark" },
               ]}
               value={themeMode}
               onChange={setThemeMode}
-              trigger={openDialog => (
+              trigger={(openDialog) => (
                 <Button
                   size="small"
                   variant="outlined"
@@ -85,12 +85,12 @@ export const TabSettings = () => {
               variant="outlined"
               children="Clear"
               onClick={() => {
-                setThemeMode(RESET)
+                setThemeMode(RESET);
                 setAppAlert({
                   visible: true,
-                  severity: 'success',
-                  message: 'Cache cleared',
-                })
+                  severity: "success",
+                  message: "Cache cleared",
+                });
               }}
             />
           </ListItemSecondaryAction>
@@ -103,7 +103,7 @@ export const TabSettings = () => {
               size="small"
               variant="outlined"
               onClick={() =>
-                alert('TODO: make debug options hidden by default')
+                alert("TODO: make debug options hidden by default")
               }
               children="Hide"
             />
@@ -111,5 +111,5 @@ export const TabSettings = () => {
         </ListItem>
       </List>
     </>
-  )
-}
+  );
+};

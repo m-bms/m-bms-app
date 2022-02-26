@@ -1,10 +1,10 @@
-import { createTheme as _createTheme } from '@mui/material'
-import { grey } from '@mui/material/colors'
+import { createTheme as _createTheme } from "@mui/material";
+import { grey } from "@mui/material/colors";
 
 export enum ThemeMode {
-  AUTO = 'auto',
-  LIGHT = 'light',
-  DARK = 'dark',
+  AUTO = "auto",
+  LIGHT = "light",
+  DARK = "dark",
 }
 
 export const createTheme = (themeMode: ThemeMode, preferDark: boolean) => {
@@ -20,16 +20,16 @@ export const createTheme = (themeMode: ThemeMode, preferDark: boolean) => {
         main: grey[200],
       },
     },
-  })
-}
+  });
+};
 
-declare module '@mui/material' {
+declare module "@mui/material" {
   interface AppBarPropsColorOverrides {
-    grey200: true
+    grey200: true;
   }
 
   interface PaletteOptions {
-    grey200: SimplePaletteColorOptions
+    grey200: SimplePaletteColorOptions;
   }
 
   interface SimplePaletteColorOptions {}

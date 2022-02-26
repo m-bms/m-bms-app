@@ -1,39 +1,39 @@
 import {
   Button,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControlLabel,
   Radio,
   RadioGroup,
-} from '@mui/material'
-import { useState } from 'react'
+} from "@mui/material";
+import { useState } from "react";
+import { DialogAutoSize } from "./DialogAutoSize";
 
 export const SelectRadio = <T extends string>(props: {
-  title: string
+  title: string;
   options: Array<{
-    value: T
-    label: string
-  }>
-  value: T
-  onChange: (value: T) => unknown
-  trigger: (openDialog: () => void) => JSX.Element
+    value: T;
+    label: string;
+  }>;
+  value: T;
+  onChange: (value: T) => unknown;
+  trigger: (openDialog: () => void) => JSX.Element;
 }) => {
-  const [value, setValue] = useState(props.value)
-  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState(props.value);
+  const [open, setOpen] = useState(false);
 
-  const closeDialog = () => setOpen(false)
+  const closeDialog = () => setOpen(false);
   const openDialog = () => {
-    setValue(props.value)
-    setOpen(true)
-  }
+    setValue(props.value);
+    setOpen(true);
+  };
 
   return (
     <>
       {props.trigger(openDialog)}
 
-      <Dialog
+      <DialogAutoSize
         open={open}
         onClose={closeDialog}
         maxWidth="xs"
@@ -62,13 +62,13 @@ export const SelectRadio = <T extends string>(props: {
           <Button onClick={closeDialog} children="Cancel" />
           <Button
             onClick={() => {
-              closeDialog()
-              props.onChange(value)
+              closeDialog();
+              props.onChange(value);
             }}
             children="OK"
           />
         </DialogActions>
-      </Dialog>
+      </DialogAutoSize>
     </>
-  )
-}
+  );
+};

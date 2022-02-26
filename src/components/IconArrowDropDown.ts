@@ -1,3 +1,3 @@
-import IconArrowDropDown from '@mui/material/internal/svg-icons/ArrowDropDown'
+import IconArrowDropDown from "@mui/material/internal/svg-icons/ArrowDropDown";
 
-export { IconArrowDropDown }
+export { IconArrowDropDown };
