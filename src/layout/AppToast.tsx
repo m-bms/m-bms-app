@@ -13,14 +13,10 @@ export const AppToast = () => {
   const [toast, setToast] = useAtom(appToastAtom);
   const severity = toast.severity ?? "success";
 
-  const closeToast = () => {
-    setToast((value) => ({ ...value, visible: false }));
-  };
+  const closeToast = () => setToast({ ...toast, visible: false });
 
   return (
     <Snackbar
-      open={toast.visible}
-      onClose={closeToast}
       autoHideDuration={3000}
       anchorOrigin={{
         horizontal: "center",
@@ -36,6 +32,8 @@ export const AppToast = () => {
           bgcolor: (theme) => `${theme.palette[severity].main}33`,
         },
       }}
+      open={toast.visible}
+      onClose={closeToast}
     >
       <Alert
         severity={severity}

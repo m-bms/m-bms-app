@@ -4,19 +4,20 @@ import { useEffect, useState } from "react";
 import { appBodyAtom } from "./AppBody";
 import { appTabAtom } from "./AppFooter";
 
-export const appHeaderChildrenAtom = atom<JSX.Element | null>(null);
+export const appHeaderAtom = atom<JSX.Element | null>(null);
 
 export const AppHeader = () => {
   const theme = useTheme();
   const [appTab] = useAtom(appTabAtom);
   const [appBody] = useAtom(appBodyAtom);
-  const [children] = useAtom(appHeaderChildrenAtom);
-  const [scrolled, setScrolled] = useState(false);
+  const [children] = useAtom(appHeaderAtom);
+
+  const [appBodyScrolled, setAppBodyScrolled] = useState(false);
 
   useEffect(() => {
     if (!appBody) return;
 
-    const updateScrolled = () => setScrolled(appBody.scrollTop > 10);
+    const updateScrolled = () => setAppBodyScrolled(appBody.scrollTop > 10);
     appBody.addEventListener("scroll", updateScrolled);
 
     return () => appBody.removeEventListener("scroll", updateScrolled);
@@ -27,11 +28,11 @@ export const AppHeader = () => {
       position="static"
       color="grey200"
       sx={{
-        boxShadow: scrolled ? 4 : 0,
+        boxShadow: appBodyScrolled ? 4 : 0,
         ".MuiIconButton-root": { fontSize: "1.2rem" },
       }}
     >
-      <Fade key={appTab} in timeout={theme.transitions.duration.enteringScreen}>
+      <Fade key={appTab} in timeout={theme.transitions.duration.short}>
         <Container maxWidth="sm" disableGutters>
           <Toolbar
             variant="dense"

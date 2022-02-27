@@ -14,13 +14,9 @@ export const AppBody = () => {
   const theme = useTheme();
 
   return (
-    <Grow
-      key={appTab}
-      in={true}
-      timeout={theme.transitions.duration.enteringScreen}
-    >
+    <Grow key={appTab} in timeout={theme.transitions.duration.short}>
       <Box ref={setAppBody} component="main" flex={1} overflow="auto">
-        <Container maxWidth="sm" disableGutters={true}>
+        <Container maxWidth="sm" disableGutters>
           {appTab === AppTab.DEVICE_LIST && <TabDeviceList />}
           {appTab === AppTab.FIND_DEVICE && <TabFindDevice />}
           {appTab === AppTab.SETTINGS && <TabSettings />}

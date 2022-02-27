@@ -1,45 +1,58 @@
-import { Box, Dialog, DialogProps, Grow, useTheme } from "@mui/material";
+import { Box, Dialog, Grow, useTheme } from "@mui/material";
+import { atom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
 
-export const AppDialog = (props: DialogProps) => {
+type AppDialogAtom = {
+  open?: boolean;
+  children?: JSX.Element;
+};
+
+export const appDialogAtom = atom<AppDialogAtom>({});
+
+export const AppDialog = () => {
   const theme = useTheme();
-  const [dialog, setDialog] = useState<HTMLElement | null>(null);
-  const [content, setContent] = useState<HTMLElement | null>(null);
+  const [dialog, setDialog] = useAtom(appDialogAtom);
+
+  const [background, setBackground] = useState<HTMLElement | null>(null);
+  const [children, setChildren] = useState<HTMLElement | null>(null);
+
+  const transitionDuration = theme.transitions.duration.short;
 
   useEffect(() => {
-    if (!content || !dialog) return;
+    if (!dialog.open || !children || !background) return;
 
     const observer = new ResizeObserver(() => {
-      dialog.style.height = `${content.offsetHeight}px`;
+      background.style.height = `${children.offsetHeight}px`;
     });
-    observer.observe(content);
+    observer.observe(children);
 
     return () => observer.disconnect();
-  }, [content, dialog]);
+  }, [dialog.open, children, background]);
 
   return (
     <Dialog
-      {...props}
+      open={!!dialog.open}
+      onClose={() => setDialog((props) => ({ ...props, open: false }))}
       fullWidth={true}
       maxWidth="xs"
       PaperProps={{
-        ref: setDialog,
+        ref: setBackground,
         sx: {
           position: "relative",
-          transition: "height 0.2s",
           overflow: "hidden",
+          transition: `height ${transitionDuration}ms ${theme.transitions.easing.easeOut}`,
         },
       }}
       TransitionComponent={Grow}
-      TransitionProps={{ timeout: theme.transitions.duration.enteringScreen }}
+      TransitionProps={{ timeout: transitionDuration }}
     >
       <Box
-        ref={setContent}
+        ref={setChildren}
         sx={{
           position: "absolute",
           width: "100%",
         }}
-        children={props.children}
+        children={dialog.children}
       />
     </Dialog>
   );

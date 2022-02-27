@@ -15,28 +15,28 @@ export const appBannerAtom = atom<AppBannerAtom>({});
 
 export const AppBanner = () => {
   const [banner] = useAtom(appBannerAtom);
-
   const theme = useTheme();
+
   const color = grey[theme.palette.mode === "dark" ? 600 : 500];
 
   return (
-    <Grow in={banner.open} timeout={theme.transitions.duration.enteringScreen}>
+    <Grow in={banner.open} timeout={theme.transitions.duration.short}>
       <Stack position="fixed" alignItems="center" top="50%" left="50%">
         {banner.icon && (
           <banner.icon
+            width="100px"
+            height="100px"
             color={color}
             style={{
               position: "absolute",
               top: "-110px",
               left: `${(banner.iconX ?? 0) - 50}px`,
             }}
-            width="100px"
-            height="100px"
           />
         )}
 
         <Typography
-          width="300px"
+          width={`${theme.breakpoints.values.xs}px`}
           position="absolute"
           color={color}
           textAlign="center"
