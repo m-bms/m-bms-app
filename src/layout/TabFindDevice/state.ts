@@ -1,14 +1,15 @@
 import { proxyWithStorage } from "/src/utils/valtio";
 
 export enum Sort {
-  ASCENDING = "ascending",
-  DESCENDING = "descending",
   OLDEST = "oldest",
   NEWEST = "newest",
+  ASCENDING = "ascending",
+  DESCENDING = "descending",
 }
 
-export const tabFindDevice = proxyWithStorage(
-  "tab-find-device",
-  { sort: Sort.ASCENDING },
-  "sort"
-);
+export const tabFindDevice = proxyWithStorage("tab-find-device", {
+  sort: Sort.OLDEST,
+  reset() {
+    tabFindDevice.sort = Sort.OLDEST;
+  },
+});

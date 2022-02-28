@@ -1,4 +1,4 @@
-import { Box, Dialog, Grow, useTheme } from "@mui/material";
+import { Box, Dialog, Grow } from "@mui/material";
 import { memo, useEffect, useState } from "react";
 import { proxy, useSnapshot } from "valtio";
 
@@ -10,13 +10,10 @@ export const appDialog = proxy(
 );
 
 export const AppDialog = memo(() => {
-  const theme = useTheme();
   const { open, children } = useSnapshot(appDialog);
 
   const [background, setBackground] = useState<HTMLElement | null>(null);
   const [childrenRoot, setChildrenRoot] = useState<HTMLElement | null>(null);
-
-  const transitionDuration = theme.transitions.duration.standard;
 
   useEffect(() => {
     if (!open || !childrenRoot || !background) return;
@@ -40,11 +37,10 @@ export const AppDialog = memo(() => {
         sx: {
           position: "relative",
           overflow: "hidden",
-          transition: `height ${transitionDuration}ms ${theme.transitions.easing.easeOut}`,
+          transition: `height 200ms`,
         },
       }}
       TransitionComponent={Grow}
-      TransitionProps={{ timeout: transitionDuration }}
     >
       <Box
         ref={setChildrenRoot}

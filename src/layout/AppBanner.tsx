@@ -1,4 +1,4 @@
-import { Box, Grow, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { memo, SVGProps } from "react";
 import { proxy, useSnapshot } from "valtio";
@@ -28,33 +28,31 @@ export const AppBanner = memo(() => {
 
   const color = grey[theme.palette.mode === "dark" ? 600 : 500];
 
-  return (
-    <Grow in={open} timeout={theme.transitions.duration.standard}>
-      <Stack position="fixed" alignItems="center" top="50%" left="50%">
-        {Icon && (
-          <Icon
-            width="100px"
-            height="100px"
-            color={color}
-            style={{
-              position: "absolute",
-              top: "-110px",
-              left: `${iconX - 50}px`,
-            }}
-          />
-        )}
-
-        <Typography
-          width={`${theme.breakpoints.values.sm}px`}
-          position="absolute"
+  return !open ? null : (
+    <Stack position="fixed" alignItems="center" top="50%" left="50%">
+      {Icon && (
+        <Icon
+          width="100px"
+          height="100px"
           color={color}
-          textAlign="center"
-          whiteSpace="pre-wrap"
-          children={message}
+          style={{
+            position: "absolute",
+            top: "-110px",
+            left: `${iconX - 50}px`,
+          }}
         />
+      )}
 
-        <Box position="absolute" top="80px" children={action} />
-      </Stack>
-    </Grow>
+      <Typography
+        width={`${theme.breakpoints.values.sm}px`}
+        position="absolute"
+        color={color}
+        textAlign="center"
+        whiteSpace="pre-wrap"
+        children={message}
+      />
+
+      <Box position="absolute" top="80px" children={action} />
+    </Stack>
   );
 });

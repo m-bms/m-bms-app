@@ -24,6 +24,7 @@ export const AppFooter = memo(() => {
         <Tabs
           variant="fullWidth"
           sx={{
+            boxShadow: 0,
             ".MuiTab-root": { fontSize: 20 },
             ".MuiTabs-indicator": { top: 0 },
           }}

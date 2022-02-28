@@ -1,4 +1,4 @@
-import { Alert, AlertColor, Snackbar, useTheme } from "@mui/material";
+import { Alert, AlertColor, Snackbar } from "@mui/material";
 import { memo } from "react";
 import { proxy, useSnapshot } from "valtio";
 
@@ -11,7 +11,6 @@ export const appToast = proxy(
 );
 
 export const AppToast = memo(() => {
-  const theme = useTheme();
   const { open, severity = "success", children } = useSnapshot(appToast);
 
   return (
@@ -21,7 +20,6 @@ export const AppToast = memo(() => {
         horizontal: "center",
         vertical: "bottom",
       }}
-      TransitionProps={{ timeout: theme.transitions.duration.standard }}
       sx={{
         bottom: "58px",
         "@media (min-width: 600px)": {

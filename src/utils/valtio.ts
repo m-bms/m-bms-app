@@ -7,7 +7,7 @@ export const proxyWithStorage = <T extends Record<string, unknown>>(
   ...keys: (keyof T)[]
 ) => {
   const local = localStorage.getItem(name);
-  const state = proxy<T>(local ? JSON.parse(local) : data);
+  const state = proxy<T>({ ...data, ...(local && JSON.parse(local)) });
 
   if (keys.length) {
     const saveLocal = () => {
@@ -23,3 +23,7 @@ export const proxyWithStorage = <T extends Record<string, unknown>>(
 
   return state;
 };
+
+declare module "valtio" {
+  function useSnapshot<T extends object>(p: T): T;
+}

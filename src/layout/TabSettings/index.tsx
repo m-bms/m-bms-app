@@ -2,9 +2,9 @@ export { tabSettings } from "./state";
 
 import { Divider, List } from "@mui/material";
 import { memo } from "react";
-import { GroupAppInfo } from "./GroupAppInfo";
-import { GroupDebug } from "./GroupDebug";
-import { GroupDisplay } from "./GroupDisplay";
+import { GroupApp } from "./GroupApp";
+import { GroupFakeHardware } from "./GroupFakeHardware";
+import { GroupInfo } from "./GroupInfo";
 import { Headher } from "./Header";
 
 export const TabSettings = memo(() => {
@@ -12,11 +12,11 @@ export const TabSettings = memo(() => {
     <>
       <Headher />
       <List>
-        <GroupAppInfo />
+        <GroupInfo />
         <Divider />
-        <GroupDisplay />
+        <GroupApp />
         <Divider />
-        <GroupDebug />
+        <GroupFakeHardware />
       </List>
     </>
   );

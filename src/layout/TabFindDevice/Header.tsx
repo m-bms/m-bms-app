@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { memo, useEffect } from "react";
 import { ref, useSnapshot } from "valtio";
 import IconSort from "~icons/fluent/arrow-sort-down-lines-24-regular";
@@ -6,11 +6,13 @@ import IconSync from "~icons/fluent/arrow-sync-24-regular";
 import { DialogRadioGroup } from "../../components/DialogRadioGroup";
 import { appDialog } from "../AppDialog";
 import { appHeader } from "../AppHeader";
+import { appToast } from "../AppToast";
 import { Sort, tabFindDevice } from "./state";
+import { bluetooth, BluetoothError } from "/src/utils/bluetooth";
 
 export const Header = memo(() => {
-  const theme = useTheme();
   const { sort } = useSnapshot(tabFindDevice);
+  const { scanning } = useSnapshot(bluetooth);
 
   useEffect(() => {
     appHeader.children = ref(
@@ -25,10 +27,10 @@ export const Header = memo(() => {
               <DialogRadioGroup
                 title="Sort by"
                 options={[
-                  { value: Sort.ASCENDING, label: "Ascending" },
-                  { value: Sort.DESCENDING, label: "Descending" },
                   { value: Sort.OLDEST, label: "Oldest" },
                   { value: Sort.NEWEST, label: "Newest" },
+                  { value: Sort.ASCENDING, label: "Ascending" },
+                  { value: Sort.DESCENDING, label: "Descending" },
                 ]}
                 value={sort}
                 onClose={() => (appDialog.open = false)}
@@ -41,20 +43,24 @@ export const Header = memo(() => {
 
         <IconButton
           children={<IconSync />}
-          sx={{
-            svg: {
-              // animation: findDevice.finding
-              //   ? `rotate-half 700ms ${theme.transitions.easing.easeInOut} infinite`
-              //   : "none",
-            },
-          }}
+          sx={{ animation: scanning ? `rotate-half 600ms infinite` : "none" }}
           onClick={() => {
-            // setFindDevice((props) => ({ ...props, finding: !props.finding }));
+            if (!scanning) {
+              bluetooth.startScan((error) => {
+                if (error === BluetoothError.BLUETOOTH_NOT_FOUND) {
+                  appToast.open = true;
+                  appToast.severity = "error";
+                  appToast.children = "Bluetooth not available";
+                }
+              });
+            } else {
+              bluetooth.stopScan();
+            }
           }}
         />
       </>
     );
-  }, [sort]);
+  }, [sort, scanning]);
 
   return null;
 });

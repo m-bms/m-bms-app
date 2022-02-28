@@ -1,24 +1,44 @@
 export { Sort, tabFindDevice } from "./state";
 
+import { Button } from "@mui/material";
 import { memo, useEffect } from "react";
-import { ref } from "valtio";
+import { useSnapshot } from "valtio";
 import IconBluetoothSearching from "~icons/fluent/bluetooth-searching-20-regular";
-import { appBanner } from "../AppBanner";
+import { BackgroundArt } from "../../components/BackgroundArt";
 import { Header } from "./Header";
+import { ScanResults } from "./ScanResults";
+import { bluetooth } from "/src/utils/bluetooth";
 
 export const TabFindDevice = memo(() => {
-  useEffect(() => {
-    appBanner.open = true;
-    appBanner.Icon = ref(IconBluetoothSearching);
-    appBanner.iconX = -6;
-    appBanner.message = "Discovering device\nvia Bluetooth...";
+  const { scanning, scanResults } = useSnapshot(bluetooth);
 
-    return appBanner.reset;
+  useEffect(() => {
+    return () => {
+      bluetooth.reset();
+    };
   }, []);
 
   return (
     <>
       <Header />
+      {scanResults.length ? (
+        <ScanResults />
+      ) : (
+        <BackgroundArt
+          Icon={IconBluetoothSearching}
+          iconX={-6}
+          message={
+            scanning
+              ? "Finding device\nvia Bluetooth..."
+              : "No device found\nvia Bluetooth"
+          }
+          action={
+            scanning ? undefined : (
+              <Button variant="outlined" children="Retry" />
+            )
+          }
+        />
+      )}
     </>
   );
 });
