@@ -1,50 +1,59 @@
 import { Box, Grow, Stack, Typography, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { atom, useAtom } from "jotai";
 import { SVGProps } from "react";
+import { proxy, useSnapshot } from "valtio";
 
-type AppBannerAtom = {
+type AppBannerState = {
   open?: boolean;
-  icon?: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+  Icon?: (props: SVGProps<SVGSVGElement>) => JSX.Element;
   iconX?: number;
   message?: string;
   action?: JSX.Element;
+  reset(): void;
 };
 
-export const appBannerAtom = atom<AppBannerAtom>({});
+export const appBanner = proxy<AppBannerState>({
+  reset() {
+    appBanner.open = false;
+    appBanner.Icon = undefined;
+    appBanner.iconX = undefined;
+    appBanner.message = undefined;
+    appBanner.action = undefined;
+  },
+});
 
 export const AppBanner = () => {
-  const [banner] = useAtom(appBannerAtom);
   const theme = useTheme();
+  const { open, Icon, iconX = 0, message, action } = useSnapshot(appBanner);
 
   const color = grey[theme.palette.mode === "dark" ? 600 : 500];
 
   return (
-    <Grow in={banner.open} timeout={theme.transitions.duration.short}>
+    <Grow in={open} timeout={theme.transitions.duration.standard}>
       <Stack position="fixed" alignItems="center" top="50%" left="50%">
-        {banner.icon && (
-          <banner.icon
+        {Icon && (
+          <Icon
             width="100px"
             height="100px"
             color={color}
             style={{
               position: "absolute",
               top: "-110px",
-              left: `${(banner.iconX ?? 0) - 50}px`,
+              left: `${iconX - 50}px`,
             }}
           />
         )}
 
         <Typography
-          width={`${theme.breakpoints.values.xs}px`}
+          width={`${theme.breakpoints.values.sm}px`}
           position="absolute"
           color={color}
           textAlign="center"
           whiteSpace="pre-wrap"
-          children={banner.message}
+          children={message}
         />
 
-        <Box position="absolute" top="80px" children={banner.action} />
+        <Box position="absolute" top="80px" children={action} />
       </Stack>
     </Grow>
   );

@@ -1,13 +1,11 @@
-import { RESET, useUpdateAtom } from "jotai/utils";
 import { memo } from "react";
-import { appToastAtom } from "../AppToast";
-import { themeModeAtom } from "./GroupDisplay";
+import { appToast } from "../AppToast";
+import { Sort, tabFindDevice } from "../TabFindDevice";
+import { tabSettings } from "./state";
 import { ListGroup, ListItemType } from "/src/components/ListGroup";
+import { ThemeMode } from "/src/utils/theme";
 
 export const GroupDebug = memo(() => {
-  const setThemeMode = useUpdateAtom(themeModeAtom);
-  const setAppAlert = useUpdateAtom(appToastAtom);
-
   return (
     <ListGroup
       header="Debug"
@@ -23,12 +21,13 @@ export const GroupDebug = memo(() => {
           label: "Cache",
           value: "Clear",
           onClick: () => {
-            setThemeMode(RESET);
-            setAppAlert({
-              visible: true,
-              severity: "success",
-              message: "Cache cleared",
-            });
+            localStorage.clear();
+            tabFindDevice.sort = Sort.ASCENDING;
+            tabSettings.themeMode = ThemeMode.DARK;
+
+            appToast.open = true;
+            appToast.severity = "success";
+            appToast.children = "Cache cleared";
           },
         },
         {

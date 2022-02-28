@@ -1,25 +1,30 @@
 import { Box, Container, Grow, useTheme } from "@mui/material";
-import { atom, useAtom } from "jotai";
-import { useUpdateAtom } from "jotai/utils";
-import { AppTab, appTabAtom } from "./AppFooter";
+import { proxy, ref, useSnapshot } from "valtio";
+import { appFooter, AppTab } from "./AppFooter";
 import { TabDeviceList } from "./TabDeviceList";
 import { TabFindDevice } from "./TabFindDevice";
 import { TabSettings } from "./TabSettings";
 
-export const appBodyAtom = atom<HTMLElement | null>(null);
+export const appBody = proxy({
+  el: null as HTMLElement | null,
+});
 
 export const AppBody = () => {
-  const [appTab] = useAtom(appTabAtom);
-  const setAppBody = useUpdateAtom(appBodyAtom);
+  const { tab } = useSnapshot(appFooter);
   const theme = useTheme();
 
   return (
-    <Grow key={appTab} in timeout={theme.transitions.duration.short}>
-      <Box ref={setAppBody} component="main" flex={1} overflow="auto">
+    <Grow key={tab} in timeout={theme.transitions.duration.standard}>
+      <Box
+        ref={(value) => (appBody.el = value ? ref(value as HTMLElement) : null)}
+        component="main"
+        flex={1}
+        overflow="auto"
+      >
         <Container maxWidth="sm" disableGutters>
-          {appTab === AppTab.DEVICE_LIST && <TabDeviceList />}
-          {appTab === AppTab.FIND_DEVICE && <TabFindDevice />}
-          {appTab === AppTab.SETTINGS && <TabSettings />}
+          {tab === AppTab.DEVICE_LIST && <TabDeviceList />}
+          {tab === AppTab.FIND_DEVICE && <TabFindDevice />}
+          {tab === AppTab.SETTINGS && <TabSettings />}
         </Container>
       </Box>
     </Grow>

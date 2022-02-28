@@ -1,22 +1,19 @@
-import { LinearProgress } from "@mui/material";
-import { useAtom } from "jotai";
+export { Sort, tabFindDevice } from "./state";
+
 import { useEffect } from "react";
+import { ref } from "valtio";
 import IconBluetoothSearching from "~icons/fluent/bluetooth-searching-20-regular";
-import { appBannerAtom } from "../AppBanner";
+import { appBanner } from "../AppBanner";
 import { Header } from "./Header";
 
 export const TabFindDevice = () => {
-  const [, setAppBanner] = useAtom(appBannerAtom);
-
   useEffect(() => {
-    setAppBanner({
-      open: true,
-      icon: IconBluetoothSearching,
-      iconX: -6,
-      message: "Discovering device\nvia Bluetooth...",
-      action: <LinearProgress sx={{ width: "200px" }} />,
-    });
-    return () => setAppBanner({ open: false });
+    appBanner.open = true;
+    appBanner.Icon = ref(IconBluetoothSearching);
+    appBanner.iconX = -6;
+    appBanner.message = "Discovering device\nvia Bluetooth...";
+
+    return appBanner.reset;
   }, []);
 
   return (

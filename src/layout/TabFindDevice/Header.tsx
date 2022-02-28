@@ -1,60 +1,57 @@
-import { Box, IconButton, Typography } from "@mui/material";
-import { useAtom } from "jotai";
-import { atomWithStorage, useUpdateAtom } from "jotai/utils";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { memo, useEffect } from "react";
+import { ref, useSnapshot } from "valtio";
 import IconSort from "~icons/fluent/arrow-sort-down-lines-24-regular";
 import IconSync from "~icons/fluent/arrow-sync-24-regular";
 import { DialogRadioGroup } from "../../components/DialogRadioGroup";
-import { appDialogAtom } from "../AppDialog";
-import { appHeaderAtom } from "../AppHeader";
-
-export enum FindDeviceSort {
-  ASCENDING = "ascending",
-  DESCENDING = "descending",
-  OLDEST = "oldest",
-  NEWEST = "newest",
-}
-
-export const findDeviceSortAtom = atomWithStorage(
-  "find-device-sort",
-  FindDeviceSort.ASCENDING
-);
+import { appDialog } from "../AppDialog";
+import { appHeader } from "../AppHeader";
+import { Sort, tabFindDevice } from "./state";
 
 export const Header = memo(() => {
-  const [sort, setSort] = useAtom(findDeviceSortAtom);
-  const [appDialog, setAppDialog] = useAtom(appDialogAtom);
-  const setAppHeader = useUpdateAtom(appHeaderAtom);
+  const theme = useTheme();
+  const { sort } = useSnapshot(tabFindDevice);
 
   useEffect(() => {
-    setAppHeader(
+    appHeader.children = ref(
       <>
         <Typography variant="h6">Find Device</Typography>
         <Box flex={1} />
 
         <IconButton
           onClick={() => {
-            setAppDialog({
-              open: true,
-              children: (
-                <DialogRadioGroup
-                  title="Sort by"
-                  options={[
-                    { value: FindDeviceSort.ASCENDING, label: "Ascending" },
-                    { value: FindDeviceSort.DESCENDING, label: "Descending" },
-                    { value: FindDeviceSort.OLDEST, label: "Oldest" },
-                    { value: FindDeviceSort.NEWEST, label: "Newest" },
-                  ]}
-                  value={sort}
-                  onClose={() => setAppDialog({ ...appDialog, open: false })}
-                  onChange={setSort}
-                />
-              ),
-            });
+            appDialog.open = true;
+            appDialog.children = ref(
+              <DialogRadioGroup
+                title="Sort by"
+                options={[
+                  { value: Sort.ASCENDING, label: "Ascending" },
+                  { value: Sort.DESCENDING, label: "Descending" },
+                  { value: Sort.OLDEST, label: "Oldest" },
+                  { value: Sort.NEWEST, label: "Newest" },
+                ]}
+                value={sort}
+                onClose={() => (appDialog.open = false)}
+                onChange={(value) => (tabFindDevice.sort = value)}
+              />
+            );
           }}
           children={<IconSort />}
         />
 
-        <IconButton children={<IconSync />} />
+        <IconButton
+          children={<IconSync />}
+          sx={{
+            svg: {
+              // animation: findDevice.finding
+              //   ? `rotate-half 700ms ${theme.transitions.easing.easeInOut} infinite`
+              //   : "none",
+            },
+          }}
+          onClick={() => {
+            // setFindDevice((props) => ({ ...props, finding: !props.finding }));
+          }}
+        />
       </>
     );
   }, [sort]);

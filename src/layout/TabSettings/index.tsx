@@ -1,4 +1,4 @@
-export { themeModeAtom } from "./GroupDisplay";
+export { tabSettings } from "./state";
 
 import { Divider, List } from "@mui/material";
 import { memo } from "react";

@@ -1,27 +1,29 @@
 import { AppBar, Container, Fade, Toolbar, useTheme } from "@mui/material";
-import { atom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { appBodyAtom } from "./AppBody";
-import { appTabAtom } from "./AppFooter";
+import { proxy, useSnapshot } from "valtio";
+import { appBody } from "./AppBody";
+import { appFooter } from "./AppFooter";
 
-export const appHeaderAtom = atom<JSX.Element | null>(null);
+export const appHeader = proxy({
+  children: null as JSX.Element | null,
+});
 
 export const AppHeader = () => {
   const theme = useTheme();
-  const [appTab] = useAtom(appTabAtom);
-  const [appBody] = useAtom(appBodyAtom);
-  const [children] = useAtom(appHeaderAtom);
-
+  const { tab } = useSnapshot(appFooter);
+  const { children } = useSnapshot(appHeader);
+  const { el: appBodyEl } = useSnapshot(appBody);
   const [appBodyScrolled, setAppBodyScrolled] = useState(false);
 
+  // For elevated on scroll
   useEffect(() => {
-    if (!appBody) return;
+    if (!appBodyEl) return;
 
-    const updateScrolled = () => setAppBodyScrolled(appBody.scrollTop > 10);
-    appBody.addEventListener("scroll", updateScrolled);
+    const updateScrolled = () => setAppBodyScrolled(appBodyEl.scrollTop > 10);
+    appBodyEl.addEventListener("scroll", updateScrolled);
 
-    return () => appBody.removeEventListener("scroll", updateScrolled);
-  }, [appBody]);
+    return () => appBodyEl.removeEventListener("scroll", updateScrolled);
+  }, [appBodyEl]);
 
   return (
     <AppBar
@@ -32,7 +34,7 @@ export const AppHeader = () => {
         ".MuiIconButton-root": { fontSize: "1.2rem" },
       }}
     >
-      <Fade key={appTab} in timeout={theme.transitions.duration.short}>
+      <Fade key={tab} in timeout={theme.transitions.duration.standard}>
         <Container maxWidth="sm" disableGutters>
           <Toolbar
             variant="dense"

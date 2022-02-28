@@ -1,17 +1,14 @@
-import { useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
 import { memo } from "react";
-import { appDialogAtom } from "../AppDialog";
+import { ref, useSnapshot } from "valtio";
+import { appDialog } from "../AppDialog";
+import { tabSettings } from "./state";
 import { DialogRadioGroup } from "/src/components/DialogRadioGroup";
 import { IconArrowDropDown } from "/src/components/IconArrowDropDown";
 import { ListGroup, ListItemType } from "/src/components/ListGroup";
 import { ThemeMode } from "/src/utils/theme";
 
-export const themeModeAtom = atomWithStorage("theme-mode", ThemeMode.DARK);
-
 export const GroupDisplay = memo(() => {
-  const [themeMode, setThemeMode] = useAtom(themeModeAtom);
-  const [appDialog, setAppDialog] = useAtom(appDialogAtom);
+  const { themeMode } = useSnapshot(tabSettings);
 
   return (
     <ListGroup
@@ -23,22 +20,20 @@ export const GroupDisplay = memo(() => {
           value: themeMode,
           endIcon: <IconArrowDropDown />,
           onClick: () => {
-            setAppDialog({
-              open: true,
-              children: (
-                <DialogRadioGroup
-                  title="Select Theme"
-                  options={[
-                    { value: ThemeMode.AUTO, label: "Auto" },
-                    { value: ThemeMode.LIGHT, label: "Light" },
-                    { value: ThemeMode.DARK, label: "Dark" },
-                  ]}
-                  value={themeMode}
-                  onClose={() => setAppDialog({ ...appDialog, open: false })}
-                  onChange={setThemeMode}
-                />
-              ),
-            });
+            appDialog.open = true;
+            appDialog.children = ref(
+              <DialogRadioGroup
+                title="Select Theme"
+                options={[
+                  { value: ThemeMode.AUTO, label: "Auto" },
+                  { value: ThemeMode.LIGHT, label: "Light" },
+                  { value: ThemeMode.DARK, label: "Dark" },
+                ]}
+                value={themeMode}
+                onClose={() => (appDialog.open = false)}
+                onChange={(value) => (tabSettings.themeMode = value)}
+              />
+            );
           },
         },
       ]}

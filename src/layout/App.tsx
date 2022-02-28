@@ -4,8 +4,8 @@ import {
   ThemeProvider,
   useMediaQuery,
 } from "@mui/material";
-import { useAtom } from "jotai";
 import { useEffect, useMemo, useState } from "react";
+import { useSnapshot } from "valtio";
 import { createTheme } from "../utils/theme";
 import { AppBanner } from "./AppBanner";
 import { AppBody } from "./AppBody";
@@ -13,11 +13,11 @@ import { AppDialog } from "./AppDialog";
 import { AppFooter } from "./AppFooter";
 import { AppHeader } from "./AppHeader";
 import { AppToast } from "./AppToast";
-import { themeModeAtom } from "./TabSettings";
+import { tabSettings } from "./TabSettings";
 
 export const App = () => {
-  const [themeMode] = useAtom(themeModeAtom);
   const preferDark = useMediaQuery("(prefers-color-scheme: dark)");
+  const { themeMode } = useSnapshot(tabSettings);
 
   const theme = useMemo(
     () => createTheme(themeMode, preferDark),

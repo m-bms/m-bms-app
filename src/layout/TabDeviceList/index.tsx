@@ -1,14 +1,14 @@
 import { Typography } from "@mui/material";
-import { useUpdateAtom } from "jotai/utils";
 import { useEffect } from "react";
-import { appHeaderAtom } from "../AppHeader";
+import { ref } from "valtio";
+import { appHeader } from "../AppHeader";
 
 export const TabDeviceList = () => {
-  const setAppHeaderChildren = useUpdateAtom(appHeaderAtom);
-
   useEffect(() => {
-    setAppHeaderChildren(<Typography variant="h6" children="Device List" />);
-  });
+    appHeader.children = ref(
+      <Typography variant="h6" children="Device List" />
+    );
+  }, []);
 
   return null;
 };

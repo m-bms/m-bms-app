@@ -1,38 +1,38 @@
 import { Box, Dialog, Grow, useTheme } from "@mui/material";
-import { atom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
+import { proxy, useSnapshot } from "valtio";
 
-type AppDialogAtom = {
-  open?: boolean;
-  children?: JSX.Element;
-};
-
-export const appDialogAtom = atom<AppDialogAtom>({});
+export const appDialog = proxy(
+  {} as {
+    open?: boolean;
+    children?: JSX.Element;
+  }
+);
 
 export const AppDialog = () => {
   const theme = useTheme();
-  const [dialog, setDialog] = useAtom(appDialogAtom);
+  const { open, children } = useSnapshot(appDialog);
 
   const [background, setBackground] = useState<HTMLElement | null>(null);
-  const [children, setChildren] = useState<HTMLElement | null>(null);
+  const [childrenRoot, setChildrenRoot] = useState<HTMLElement | null>(null);
 
-  const transitionDuration = theme.transitions.duration.short;
+  const transitionDuration = theme.transitions.duration.standard;
 
   useEffect(() => {
-    if (!dialog.open || !children || !background) return;
+    if (!open || !childrenRoot || !background) return;
 
     const observer = new ResizeObserver(() => {
-      background.style.height = `${children.offsetHeight}px`;
+      background.style.height = `${childrenRoot.offsetHeight}px`;
     });
-    observer.observe(children);
+    observer.observe(childrenRoot);
 
     return () => observer.disconnect();
-  }, [dialog.open, children, background]);
+  }, [open, childrenRoot, background]);
 
   return (
     <Dialog
-      open={!!dialog.open}
-      onClose={() => setDialog((props) => ({ ...props, open: false }))}
+      open={!!open}
+      onClose={() => (appDialog.open = false)}
       fullWidth={true}
       maxWidth="xs"
       PaperProps={{
@@ -47,12 +47,12 @@ export const AppDialog = () => {
       TransitionProps={{ timeout: transitionDuration }}
     >
       <Box
-        ref={setChildren}
+        ref={setChildrenRoot}
         sx={{
           position: "absolute",
           width: "100%",
         }}
-        children={dialog.children}
+        children={children}
       />
     </Dialog>
   );

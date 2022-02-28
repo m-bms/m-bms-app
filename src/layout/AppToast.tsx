@@ -1,19 +1,17 @@
-import { Alert, AlertColor, Snackbar } from "@mui/material";
-import { atom, useAtom } from "jotai";
+import { Alert, AlertColor, Snackbar, useTheme } from "@mui/material";
+import { proxy, useSnapshot } from "valtio";
 
-type AppToastAtom = {
-  visible?: boolean;
-  severity?: AlertColor;
-  message?: string;
-};
-
-export const appToastAtom = atom<AppToastAtom>({});
+export const appToast = proxy(
+  {} as {
+    open?: boolean;
+    severity?: AlertColor;
+    children?: string;
+  }
+);
 
 export const AppToast = () => {
-  const [toast, setToast] = useAtom(appToastAtom);
-  const severity = toast.severity ?? "success";
-
-  const closeToast = () => setToast({ ...toast, visible: false });
+  const theme = useTheme();
+  const { open, severity = "success", children } = useSnapshot(appToast);
 
   return (
     <Snackbar
@@ -22,6 +20,7 @@ export const AppToast = () => {
         horizontal: "center",
         vertical: "bottom",
       }}
+      TransitionProps={{ timeout: theme.transitions.duration.standard }}
       sx={{
         bottom: "58px",
         "@media (min-width: 600px)": {
@@ -32,13 +31,13 @@ export const AppToast = () => {
           bgcolor: (theme) => `${theme.palette[severity].main}33`,
         },
       }}
-      open={toast.visible}
-      onClose={closeToast}
+      open={open}
+      onClose={() => (appToast.open = false)}
     >
       <Alert
         severity={severity}
-        onClose={closeToast}
-        children={toast.message}
+        onClose={() => (appToast.open = false)}
+        children={children}
       />
     </Snackbar>
   );
