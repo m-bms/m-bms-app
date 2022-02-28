@@ -18,6 +18,7 @@ import { tabSettings } from "./TabSettings";
 export const App = () => {
   const preferDark = useMediaQuery("(prefers-color-scheme: dark)");
   const { themeMode } = useSnapshot(tabSettings);
+  const [appHeight, setAppHeight] = useState(0);
 
   const theme = useMemo(
     () => createTheme(themeMode, preferDark),
@@ -25,7 +26,6 @@ export const App = () => {
   );
 
   // For mobile browsers that 100vh won't work
-  const [appHeight, setAppHeight] = useState(0);
   useEffect(() => {
     const updateAppHeight = () => setAppHeight(visualViewport.height);
     updateAppHeight();

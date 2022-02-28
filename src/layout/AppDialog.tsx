@@ -1,5 +1,5 @@
 import { Box, Dialog, Grow, useTheme } from "@mui/material";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { proxy, useSnapshot } from "valtio";
 
 export const appDialog = proxy(
@@ -9,7 +9,7 @@ export const appDialog = proxy(
   }
 );
 
-export const AppDialog = () => {
+export const AppDialog = memo(() => {
   const theme = useTheme();
   const { open, children } = useSnapshot(appDialog);
 
@@ -56,4 +56,4 @@ export const AppDialog = () => {
       />
     </Dialog>
   );
-};
+});

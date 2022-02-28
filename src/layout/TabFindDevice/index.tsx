@@ -1,12 +1,12 @@
 export { Sort, tabFindDevice } from "./state";
 
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import { ref } from "valtio";
 import IconBluetoothSearching from "~icons/fluent/bluetooth-searching-20-regular";
 import { appBanner } from "../AppBanner";
 import { Header } from "./Header";
 
-export const TabFindDevice = () => {
+export const TabFindDevice = memo(() => {
   useEffect(() => {
     appBanner.open = true;
     appBanner.Icon = ref(IconBluetoothSearching);
@@ -21,4 +21,4 @@ export const TabFindDevice = () => {
       <Header />
     </>
   );
-};
+});

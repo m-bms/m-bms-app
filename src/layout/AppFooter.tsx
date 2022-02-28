@@ -1,4 +1,5 @@
 import { AppBar, Container, Tab, Tabs } from "@mui/material";
+import { memo } from "react";
 import { proxy, useSnapshot } from "valtio";
 import IconBattery from "~icons/fluent/battery-0-24-regular";
 import IconSearch from "~icons/fluent/search-24-regular";
@@ -14,7 +15,7 @@ export const appFooter = proxy({
   tab: AppTab.DEVICE_LIST,
 });
 
-export const AppFooter = () => {
+export const AppFooter = memo(() => {
   const { tab } = useSnapshot(appFooter);
 
   return (
@@ -36,4 +37,4 @@ export const AppFooter = () => {
       </Container>
     </AppBar>
   );
-};
+});

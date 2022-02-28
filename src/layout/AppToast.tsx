@@ -1,4 +1,5 @@
 import { Alert, AlertColor, Snackbar, useTheme } from "@mui/material";
+import { memo } from "react";
 import { proxy, useSnapshot } from "valtio";
 
 export const appToast = proxy(
@@ -9,7 +10,7 @@ export const appToast = proxy(
   }
 );
 
-export const AppToast = () => {
+export const AppToast = memo(() => {
   const theme = useTheme();
   const { open, severity = "success", children } = useSnapshot(appToast);
 
@@ -41,4 +42,4 @@ export const AppToast = () => {
       />
     </Snackbar>
   );
-};
+});

@@ -1,6 +1,6 @@
 import { Box, Grow, Stack, Typography, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { SVGProps } from "react";
+import { memo, SVGProps } from "react";
 import { proxy, useSnapshot } from "valtio";
 
 type AppBannerState = {
@@ -22,7 +22,7 @@ export const appBanner = proxy<AppBannerState>({
   },
 });
 
-export const AppBanner = () => {
+export const AppBanner = memo(() => {
   const theme = useTheme();
   const { open, Icon, iconX = 0, message, action } = useSnapshot(appBanner);
 
@@ -57,4 +57,4 @@ export const AppBanner = () => {
       </Stack>
     </Grow>
   );
-};
+});

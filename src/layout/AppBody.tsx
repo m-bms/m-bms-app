@@ -1,4 +1,5 @@
 import { Box, Container, Grow, useTheme } from "@mui/material";
+import { memo } from "react";
 import { proxy, ref, useSnapshot } from "valtio";
 import { appFooter, AppTab } from "./AppFooter";
 import { TabDeviceList } from "./TabDeviceList";
@@ -9,7 +10,7 @@ export const appBody = proxy({
   el: null as HTMLElement | null,
 });
 
-export const AppBody = () => {
+export const AppBody = memo(() => {
   const { tab } = useSnapshot(appFooter);
   const theme = useTheme();
 
@@ -29,4 +30,4 @@ export const AppBody = () => {
       </Box>
     </Grow>
   );
-};
+});

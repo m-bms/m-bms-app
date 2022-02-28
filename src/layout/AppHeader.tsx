@@ -1,5 +1,5 @@
 import { AppBar, Container, Fade, Toolbar, useTheme } from "@mui/material";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { proxy, useSnapshot } from "valtio";
 import { appBody } from "./AppBody";
 import { appFooter } from "./AppFooter";
@@ -8,7 +8,7 @@ export const appHeader = proxy({
   children: null as JSX.Element | null,
 });
 
-export const AppHeader = () => {
+export const AppHeader = memo(() => {
   const theme = useTheme();
   const { tab } = useSnapshot(appFooter);
   const { children } = useSnapshot(appHeader);
@@ -45,4 +45,4 @@ export const AppHeader = () => {
       </Fade>
     </AppBar>
   );
-};
+});
