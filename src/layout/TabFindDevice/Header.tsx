@@ -6,9 +6,9 @@ import IconSync from "~icons/fluent/arrow-sync-24-regular";
 import { DialogRadioGroup } from "../../components/DialogRadioGroup";
 import { appDialog } from "../AppDialog";
 import { appHeader } from "../AppHeader";
-import { appToast } from "../AppToast";
+import { bluetoothStartScan } from "./helpers";
 import { Sort, tabFindDevice } from "./state";
-import { bluetooth, BluetoothError } from "/src/utils/bluetooth";
+import { bluetooth } from "/src/utils/bluetooth";
 
 export const Header = memo(() => {
   const { sort } = useSnapshot(tabFindDevice);
@@ -45,17 +45,8 @@ export const Header = memo(() => {
           children={<IconSync />}
           sx={{ animation: scanning ? `rotate-half 600ms infinite` : "none" }}
           onClick={() => {
-            if (!scanning) {
-              bluetooth.startScan((error) => {
-                if (error === BluetoothError.BLUETOOTH_NOT_FOUND) {
-                  appToast.open = true;
-                  appToast.severity = "error";
-                  appToast.children = "Bluetooth not available";
-                }
-              });
-            } else {
-              bluetooth.stopScan();
-            }
+            if (!scanning) bluetoothStartScan();
+            else bluetooth.stopScan();
           }}
         />
       </>

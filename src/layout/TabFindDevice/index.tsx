@@ -6,6 +6,7 @@ import { useSnapshot } from "valtio";
 import IconBluetoothSearching from "~icons/fluent/bluetooth-searching-20-regular";
 import { BackgroundArt } from "../../components/BackgroundArt";
 import { Header } from "./Header";
+import { bluetoothStartScan } from "./helpers";
 import { ScanResults } from "./ScanResults";
 import { bluetooth } from "/src/utils/bluetooth";
 
@@ -13,9 +14,8 @@ export const TabFindDevice = memo(() => {
   const { scanning, scanResults } = useSnapshot(bluetooth);
 
   useEffect(() => {
-    return () => {
-      bluetooth.reset();
-    };
+    bluetoothStartScan();
+    return bluetooth.reset;
   }, []);
 
   return (
@@ -34,7 +34,11 @@ export const TabFindDevice = memo(() => {
           }
           action={
             scanning ? undefined : (
-              <Button variant="outlined" children="Retry" />
+              <Button
+                variant="outlined"
+                children="Retry"
+                onClick={bluetoothStartScan}
+              />
             )
           }
         />
