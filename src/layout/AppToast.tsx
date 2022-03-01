@@ -1,5 +1,6 @@
-import { Alert, AlertColor, Snackbar } from "@mui/material";
-import { memo } from "react";
+import { Alert, AlertColor, Snackbar, useTheme } from "@mui/material";
+import Color from "color";
+import { memo, useMemo } from "react";
 import { proxy, useSnapshot } from "valtio";
 
 export const appToast = proxy(
@@ -11,7 +12,16 @@ export const appToast = proxy(
 );
 
 export const AppToast = memo(() => {
+  const theme = useTheme();
   const { open, severity = "success", children } = useSnapshot(appToast);
+
+  const themeMode = theme.palette.mode;
+  const mainColor = theme.palette[severity].main;
+
+  const backgroundColor = useMemo(() => {
+    const color = Color(mainColor);
+    return themeMode === "dark" ? color.darken(0.7) : color.lighten(0.7);
+  }, [themeMode, mainColor]);
 
   return (
     <Snackbar
@@ -27,7 +37,7 @@ export const AppToast = memo(() => {
         },
         ".MuiAlert-root": {
           width: "100%",
-          bgcolor: (theme) => `${theme.palette[severity].main}33`,
+          bgcolor: backgroundColor.toString(),
         },
       }}
       open={open}

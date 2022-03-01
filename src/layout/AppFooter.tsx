@@ -19,15 +19,18 @@ export const AppFooter = memo(() => {
   const { tab } = useSnapshot(appFooter);
 
   return (
-    <AppBar position="static" color="grey200">
+    <AppBar
+      position="static"
+      color="grey200"
+      sx={{
+        boxShadow: 0,
+        ".MuiTab-root": { fontSize: 20 },
+        ".MuiTabs-indicator": { top: 0 },
+      }}
+    >
       <Container maxWidth="xs" disableGutters>
         <Tabs
           variant="fullWidth"
-          sx={{
-            boxShadow: 0,
-            ".MuiTab-root": { fontSize: 20 },
-            ".MuiTabs-indicator": { top: 0 },
-          }}
           value={tab}
           onChange={(_, value) => (appFooter.tab = value as AppTab)}
         >

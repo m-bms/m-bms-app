@@ -12,6 +12,7 @@ import { memo, useMemo } from "react";
 import { useSnapshot } from "valtio";
 import IconBluetooth from "~icons/fluent/bluetooth-24-regular";
 import { Sort, tabFindDevice } from ".";
+import { bluetoothConnect } from "./helpers";
 import { bluetooth } from "/src/utils/bluetooth";
 import { compareStrings } from "/src/utils/common";
 
@@ -50,7 +51,14 @@ export const ScanResults = memo(() => {
             />
 
             <ListItemSecondaryAction>
-              <Button variant="outlined" size="small" children="Set up" />
+              <Button
+                variant="outlined"
+                size="small"
+                children="Set up"
+                onClick={() => {
+                  bluetoothConnect(device);
+                }}
+              />
             </ListItemSecondaryAction>
           </ListItem>
           <Divider variant="inset" />

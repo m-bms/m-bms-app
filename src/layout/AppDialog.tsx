@@ -5,12 +5,13 @@ import { proxy, useSnapshot } from "valtio";
 export const appDialog = proxy(
   {} as {
     open?: boolean;
+    onClose?: () => unknown;
     children?: JSX.Element;
   }
 );
 
 export const AppDialog = memo(() => {
-  const { open, children } = useSnapshot(appDialog);
+  const { open, onClose, children } = useSnapshot(appDialog);
 
   const [background, setBackground] = useState<HTMLElement | null>(null);
   const [childrenRoot, setChildrenRoot] = useState<HTMLElement | null>(null);
@@ -29,7 +30,10 @@ export const AppDialog = memo(() => {
   return (
     <Dialog
       open={!!open}
-      onClose={() => (appDialog.open = false)}
+      onClose={() => {
+        appDialog.open = false;
+        onClose?.();
+      }}
       fullWidth={true}
       maxWidth="xs"
       PaperProps={{

@@ -9,7 +9,6 @@ export const BackgroundArt = (props: {
   action?: JSX.Element;
 }) => {
   const theme = useTheme();
-
   const color = grey[theme.palette.mode === "dark" ? 600 : 500];
 
   return (

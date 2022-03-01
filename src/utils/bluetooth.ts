@@ -1,48 +1,57 @@
-import { ScanResult } from "@capacitor-community/bluetooth-le";
-import { randMac, randNumber, randProductName } from "@ngneat/falso";
+import { BleDevice, ScanResult } from "@capacitor-community/bluetooth-le";
+import {
+  randBoolean,
+  randMac,
+  randNumber,
+  randProductName,
+} from "@ngneat/falso";
 import { promise } from "fastq";
 import { proxy } from "valtio";
 import { tabSettings } from "../layout/TabSettings";
 import { sleep } from "./common";
 
 const SCAN_RESULT_MAX = 20;
+const INVALID = "[ INVALID ]";
 
-export enum BluetoothError {
+export enum BluetoothResponse {
   BLUETOOTH_NOT_FOUND,
+  UNABLED_TO_CONNECT,
+  SUCCESS,
+  ERROR,
+  INTERRUPTED,
 }
 
 const queueScan = promise(async (task: () => unknown) => task(), 1);
+const queueConnect = promise(async (task: () => unknown) => task(), 1);
 
 export const bluetooth = proxy({
+  // SCANNING
   scanResults: [] as ScanResult[],
   scanning: false,
-  startScan(onError?: (error: BluetoothError) => unknown) {
-    if (bluetooth.scanning) return;
+  startScan(onError?: (error: BluetoothResponse) => unknown) {
     bluetooth.scanning = true;
     bluetooth.scanResults = [];
 
-    queueScan.push(() => sleep(1000));
-    queueScan.push(async () => {
+    queueScan.push(() => sleep(100));
+    queueScan.push(() => {
       if (tabSettings.bluetoothEnabled) return;
-
-      await sleep(500);
       bluetooth.stopScan();
-      onError?.(BluetoothError.BLUETOOTH_NOT_FOUND);
+      onError?.(BluetoothResponse.BLUETOOTH_NOT_FOUND);
     });
 
     let resultCount = 0;
     const addScanResult = () => {
       if (++resultCount > SCAN_RESULT_MAX || !tabSettings.devicesEnabled) {
-        queueScan.push(() => sleep(500));
         queueScan.push(bluetooth.stopScan);
         return;
       }
 
       queueScan.push(() => {
+        const invalid = randBoolean();
         bluetooth.scanResults.push({
           device: {
             deviceId: randMac(),
-            name: randProductName(),
+            name: invalid ? INVALID : randProductName(),
           },
         });
       });
@@ -54,12 +63,20 @@ export const bluetooth = proxy({
     addScanResult();
   },
   stopScan() {
-    if (!bluetooth.scanning) return;
     bluetooth.scanning = false;
     queueScan.kill();
   },
   reset() {
     bluetooth.stopScan();
     bluetooth.scanResults = [];
+  },
+
+  // CONNECTING
+  connect(device: BleDevice, onFinish: (error: boolean) => unknown) {
+    queueConnect.push(() => sleep(1500));
+    queueConnect.push(() => onFinish(device.name === INVALID));
+  },
+  stopConnect() {
+    queueConnect.kill();
   },
 });

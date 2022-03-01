@@ -7,6 +7,7 @@
     "dev:web": "vite --host"
   },
   "dependencies": {
+    "@awesome-cordova-plugins/wifi-wizard-2": "^5.39.1",
     "@capacitor-community/bluetooth-le": "^1.8.0",
     "@capacitor/android": "3.4.1",
     "@capacitor/app": "^1.1.0",
@@ -20,6 +21,8 @@
     "@mui-treasury/styles": "^1.13.1",
     "@mui/material": "^5.4.3",
     "@ngneat/falso": "^2.27.0",
+    "color": "^4.2.1",
+    "cordova-plugin-wifiwizard2": "^3.1.1",
     "fastq": "^1.13.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -33,6 +36,7 @@
     "@iconify-json/fluent": "^1.1.1",
     "@iconify-json/mdi": "^1.1.0",
     "@svgr/core": "^6.2.1",
+    "@types/color": "^3.0.3",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "@vitejs/plugin-react": "^1.2.0",
