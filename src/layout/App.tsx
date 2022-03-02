@@ -1,50 +1,45 @@
-import {
-  CssBaseline,
-  Stack,
-  ThemeProvider,
-  useMediaQuery,
-} from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import { useSnapshot } from "valtio";
-import { createTheme } from "../utils/theme";
-import { AppBanner } from "./AppBanner";
-import { AppBody } from "./AppBody";
-import { AppDialog } from "./AppDialog";
-import { AppFooter } from "./AppFooter";
-import { AppHeader } from "./AppHeader";
-import { AppToast } from "./AppToast";
-import { tabSettings } from "./TabSettings";
+import { CssBaseline } from "@mui/material";
+import { proxy, useSnapshot } from "valtio";
+import { ThemeModeProvider } from "../components/ThemeModeProvider";
+import { AddDevicePage } from "./AddDevicePage";
+import { HomePage } from "./HomePage";
+import { SettingsPage } from "./SettingsPage";
+import { settingsPage } from "./SettingsPage/state";
+
+export enum AppPage {
+  HOME,
+  SETTINGS,
+  ADD_DEVICE,
+}
+
+export const app = proxy({
+  page: AppPage.HOME,
+});
 
 export const App = () => {
-  const preferDark = useMediaQuery("(prefers-color-scheme: dark)");
-  const { themeMode } = useSnapshot(tabSettings);
-  const [appHeight, setAppHeight] = useState(0);
+  const { page } = useSnapshot(app);
+  const { themeMode } = useSnapshot(settingsPage);
 
-  const theme = useMemo(
-    () => createTheme(themeMode, preferDark),
-    [themeMode, preferDark]
-  );
+  // TODO: add status bar
+  // useEffect(() => {
+  //   if (Capacitor.getPlatform() === "web") return;
 
-  // For mobile browsers that 100vh won't work
-  useEffect(() => {
-    const updateAppHeight = () => setAppHeight(visualViewport.height);
-    updateAppHeight();
-    visualViewport.addEventListener("resize", updateAppHeight);
-
-    return () => visualViewport.removeEventListener("resize", updateAppHeight);
-  }, []);
+  //   if (theme.palette.mode === "dark") {
+  //     StatusBar.setStyle({ style: Style.Dark });
+  //     StatusBar.setBackgroundColor({ color: "#121212" });
+  //   } else {
+  //     StatusBar.setStyle({ style: Style.Light });
+  //     StatusBar.setBackgroundColor({ color: "#fff" });
+  //   }
+  // }, [theme.palette.mode]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeModeProvider mode={themeMode}>
       <CssBaseline />
-      <Stack height={`${appHeight}px`}>
-        <AppHeader />
-        <AppBody />
-        <AppFooter />
-      </Stack>
-      <AppBanner />
-      <AppToast />
-      <AppDialog />
-    </ThemeProvider>
+
+      {page === AppPage.HOME && <HomePage />}
+      {page === AppPage.SETTINGS && <SettingsPage />}
+      {page === AppPage.ADD_DEVICE && <AddDevicePage />}
+    </ThemeModeProvider>
   );
 };

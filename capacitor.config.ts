@@ -6,6 +6,7 @@ const config: CapacitorConfig = {
   webDir: "dist",
   server: {
     url: "192.168.0.22:3000",
+    cleartext: true,
   },
 };
 

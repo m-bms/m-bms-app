@@ -7,20 +7,18 @@ import {
   Typography,
 } from "@mui/material";
 import { ComponentProps } from "react";
-import { ref } from "valtio";
-import { appDialog } from "../layout/AppDialog";
-import { DialogRadioGroup } from "./DialogRadioGroup";
-import { IconArrowDropDown } from "./IconArrowDropDown";
-import { SwitchAndroid12 } from "./SwitchAndroid12";
+import { DialogRadioGroup } from "/src/components/DialogRadioGroup";
+import { IconArrowDropDown } from "/src/components/IconArrowDropDown";
+import { SwitchAndroid12 } from "/src/components/SwitchAndroid12";
 
-export enum ListItemType {
+export enum ItemType {
   TEXT = "text",
   BUTTON = "button",
   SWITCH = "switch",
   RADIO = "radio",
 }
 
-export const ListGroup = (props: {
+export const Group = (props: {
   header: string;
   items: Array<
     {
@@ -28,21 +26,21 @@ export const ListGroup = (props: {
       disabled?: boolean;
     } & (
       | {
-          type: ListItemType.TEXT;
+          type: ItemType.TEXT;
           text: string;
         }
       | {
-          type: ListItemType.BUTTON;
+          type: ItemType.BUTTON;
           text: string;
           onClick?: () => unknown;
         }
       | {
-          type: ListItemType.SWITCH;
+          type: ItemType.SWITCH;
           checked: boolean;
           onClick?: () => unknown;
         }
       | ({
-          type: ListItemType.RADIO;
+          type: ItemType.RADIO;
           value: string;
         } & Pick<
           ComponentProps<typeof DialogRadioGroup>,
@@ -59,11 +57,11 @@ export const ListGroup = (props: {
         <ListItem key={item.label} sx={{ alignItems: "baseline" }}>
           <ListItemText children={item.label} />
 
-          {item.type === ListItemType.TEXT && (
+          {item.type === ItemType.TEXT && (
             <Typography variant="caption" children={item.text} />
           )}
 
-          {item.type === ListItemType.BUTTON && (
+          {item.type === ItemType.BUTTON && (
             <ListItemSecondaryAction>
               <Button
                 size="small"
@@ -75,7 +73,7 @@ export const ListGroup = (props: {
             </ListItemSecondaryAction>
           )}
 
-          {item.type === ListItemType.SWITCH && (
+          {item.type === ItemType.SWITCH && (
             <ListItemSecondaryAction>
               <SwitchAndroid12
                 disabled={item.disabled}
@@ -85,26 +83,23 @@ export const ListGroup = (props: {
             </ListItemSecondaryAction>
           )}
 
-          {item.type === ListItemType.RADIO && (
+          {item.type === ItemType.RADIO && (
             <ListItemSecondaryAction>
-              <Button
-                size="small"
-                variant="outlined"
-                disabled={item.disabled}
-                onClick={() => {
-                  appDialog.open = true;
-                  appDialog.children = ref(
-                    <DialogRadioGroup
-                      title={item.title}
-                      options={item.options}
-                      value={item.value}
-                      onClose={() => (appDialog.open = false)}
-                      onChange={item.onChange}
-                    />
-                  );
-                }}
-                endIcon={<IconArrowDropDown />}
-                children={item.value}
+              <DialogRadioGroup
+                title={item.title}
+                options={item.options}
+                value={item.value}
+                onChange={item.onChange}
+                trigger={(openDialog) => (
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    disabled={item.disabled}
+                    endIcon={<IconArrowDropDown />}
+                    onClick={openDialog}
+                    children={item.value}
+                  />
+                )}
               />
             </ListItemSecondaryAction>
           )}

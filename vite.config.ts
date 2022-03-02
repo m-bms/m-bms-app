@@ -3,11 +3,5 @@ import pluginIcons from "unplugin-icons/vite";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [
-    pluginReact(),
-    pluginIcons({
-      compiler: "jsx",
-      jsx: "react",
-    }),
-  ],
+  plugins: [pluginReact(), pluginIcons()],
 });

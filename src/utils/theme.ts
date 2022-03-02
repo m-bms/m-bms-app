@@ -23,14 +23,14 @@ export const createTheme = (themeMode: ThemeMode, preferDark: boolean) => {
   });
 };
 
-declare module "@mui/material" {
-  interface AppBarPropsColorOverrides {
-    grey200: true;
-  }
+// declare module "@mui/material" {
+//   interface AppBarPropsColorOverrides {
+//     grey200: true;
+//   }
 
-  interface PaletteOptions {
-    grey200: SimplePaletteColorOptions;
-  }
+//   interface PaletteOptions {
+//     grey200: SimplePaletteColorOptions;
+//   }
 
-  interface SimplePaletteColorOptions {}
-}
+//   interface SimplePaletteColorOptions {}
+// }

@@ -5,10 +5,11 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "jsx": "react-jsx",
-    "types": ["vite/client", "unplugin-icons/types/react"],
+    "types": ["vite/client"],
     "strict": true,
     "paths": {
       "/src/*": ["./src/*"]
     }
-  }
+  },
+  "include": ["src/**/*"]
 }

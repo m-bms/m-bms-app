@@ -1,9 +1,6 @@
-import { WifiWizard2 } from "@awesome-cordova-plugins/wifi-wizard-2";
 import { randMac, randProductName } from "@ngneat/falso";
 import { promise } from "fastq";
-import { proxy } from "valtio";
 import { sleep } from "./common";
-WifiWizard2;
 
 export enum WifiReponse {}
 
@@ -16,10 +13,11 @@ export type WifiDevice = {
 const SCAN_RESULT_MAX = 10;
 export const WIFI_PASSWORD = "1234";
 
-const queueScan = promise(async (task: () => unknown) => task(), 1);
+const queueScanNetwork = promise(async (task: () => unknown) => task(), 1);
+const queueScanDevice = promise(async (task: () => unknown) => task(), 1);
 const queueJoin = promise(async (task: () => unknown) => task(), 1);
 
-export const wifi = proxy({
+export const wifi = {
   // SCANNING
   scanResults: [] as WifiDevice[],
   scanning: false,
@@ -27,8 +25,8 @@ export const wifi = proxy({
     wifi.scanning = true;
     wifi.scanResults = [];
 
-    queueScan.push(() => sleep(1500));
-    queueScan.push(() => {
+    queueScanNetwork.push(() => sleep(1500));
+    queueScanNetwork.push(() => {
       wifi.scanResults = Array.from({ length: SCAN_RESULT_MAX }).map(
         (_, index) => {
           return {
@@ -44,7 +42,7 @@ export const wifi = proxy({
   },
   stopScan() {
     wifi.scanning = false;
-    queueScan.kill();
+    queueScanNetwork.kill();
   },
   reset() {
     wifi.stopScan();
@@ -63,4 +61,15 @@ export const wifi = proxy({
   stopConnect() {
     queueJoin.kill();
   },
-});
+
+  devices: [] as ConnectedDevice[],
+  async scanDevices() {
+    await sleep(2000);
+    return wifi.devices;
+  },
+};
+
+export type ConnectedDevice = {
+  name: string;
+  id: string;
+};

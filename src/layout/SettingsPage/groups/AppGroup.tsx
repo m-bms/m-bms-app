@@ -1,20 +1,18 @@
 import { memo } from "react";
 import { useSnapshot } from "valtio";
-import { appToast } from "../AppToast";
-import { tabFindDevice } from "../TabFindDevice";
-import { tabSettings } from "./state";
-import { ListGroup, ListItemType } from "/src/components/ListGroup";
+import { Group, ItemType } from "../Group";
+import { settingsPage } from "../state";
 import { ThemeMode } from "/src/utils/theme";
 
-export const GroupApp = memo(() => {
-  const { themeMode } = useSnapshot(tabSettings);
+export const AppGroup = memo(() => {
+  const { themeMode } = useSnapshot(settingsPage);
 
   return (
-    <ListGroup
+    <Group
       header="App"
       items={[
         {
-          type: ListItemType.RADIO,
+          type: ItemType.RADIO,
           label: "Theme",
           title: "Select Theme",
           options: [
@@ -24,21 +22,21 @@ export const GroupApp = memo(() => {
           ],
           value: themeMode,
           onChange(value) {
-            tabSettings.themeMode = value as ThemeMode;
+            settingsPage.themeMode = value as ThemeMode;
           },
         },
         {
-          type: ListItemType.BUTTON,
+          type: ItemType.BUTTON,
           label: "Cache",
           text: "Clear",
           onClick: () => {
             localStorage.clear();
-            tabFindDevice.reset();
-            tabSettings.reset();
+            // tabFindDevice.reset();
+            settingsPage.reset();
 
-            appToast.open = true;
-            appToast.severity = "success";
-            appToast.children = "Cache cleared";
+            // appToast.open = true;
+            // appToast.severity = "success";
+            // appToast.children = "Cache cleared";
           },
         },
       ]}

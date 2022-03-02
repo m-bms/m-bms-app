@@ -1,5 +1,6 @@
 import {
   Button,
+  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -16,38 +17,52 @@ export const DialogRadioGroup = <T extends string>(props: {
     label: string;
   }>;
   value: T;
-  onClose: () => unknown;
   onChange: (value: T) => unknown;
+  trigger: (openDialog: () => unknown) => JSX.Element;
 }) => {
   const [value, setValue] = useState(props.value);
+  const [open, setOpen] = useState(false);
+
+  const closeDialog = () => setOpen(false);
+  const openDialog = () => {
+    setValue(props.value);
+    setOpen(true);
+  };
 
   return (
     <>
-      <DialogTitle children={props.title} />
+      {props.trigger(openDialog)}
 
-      <DialogContent>
-        <RadioGroup value={value} onChange={(_, value) => setValue(value as T)}>
-          {props.options.map(({ value, label }) => (
-            <FormControlLabel
-              key={value}
-              value={value}
-              label={label}
-              control={<Radio />}
-            />
-          ))}
-        </RadioGroup>
-      </DialogContent>
+      <Dialog open={open} onClose={closeDialog} fullWidth={true} maxWidth="xs">
+        <DialogTitle children={props.title} />
 
-      <DialogActions>
-        <Button onClick={props.onClose} children="Cancel" />
-        <Button
-          onClick={() => {
-            props.onClose();
-            props.onChange(value);
-          }}
-          children="OK"
-        />
-      </DialogActions>
+        <DialogContent>
+          <RadioGroup
+            value={value}
+            onChange={(_, value) => setValue(value as T)}
+          >
+            {props.options.map(({ value, label }) => (
+              <FormControlLabel
+                key={value}
+                value={value}
+                label={label}
+                control={<Radio />}
+              />
+            ))}
+          </RadioGroup>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={closeDialog} children="Cancel" />
+          <Button
+            onClick={() => {
+              closeDialog();
+              props.onChange(value);
+            }}
+            children="OK"
+          />
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

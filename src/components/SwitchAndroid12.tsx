@@ -7,7 +7,7 @@ export const SwitchAndroid12 = styled(Switch)(() => ({
   ".MuiSwitch-track": {
     borderRadius: 22 / 2,
     "&:before, &:after": {
-      content: '""',
+      content: "''",
       position: "absolute",
       top: "50%",
       transform: "translateY(-50%)",
