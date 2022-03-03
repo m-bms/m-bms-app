@@ -1,11 +1,7 @@
 import { SvgIcon as MuiSvgIcon, SvgIconProps } from "@mui/material";
 import { useMemo } from "react";
 
-export const SvgIcon = (
-  props: SvgIconProps & {
-    raw: string;
-  }
-) => {
+export const BaseSvgIcon = (props: SvgIconProps & { raw: string }) => {
   const { raw, ...rest } = props;
 
   const [viewBox, d] = useMemo(() => {

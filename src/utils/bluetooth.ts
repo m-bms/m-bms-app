@@ -1,82 +1,47 @@
-import { BleDevice, ScanResult } from "@capacitor-community/bluetooth-le";
-import {
-  randBoolean,
-  randMac,
-  randNumber,
-  randProductName,
-} from "@ngneat/falso";
-import { promise } from "fastq";
-import { proxy } from "valtio";
-import { tabSettings } from "../layout/TabSettings";
+import { BleDevice } from "@capacitor-community/bluetooth-le";
+import { randBoolean, randMac, randProductName } from "@ngneat/falso";
+import { settingsPage } from "../components/pages/SettingsPage";
 import { sleep } from "./common";
 
-const SCAN_RESULT_MAX = 20;
-const INVALID = "[ INVALID ]";
-
-export enum BluetoothResponse {
-  BLUETOOTH_NOT_FOUND,
-  UNABLED_TO_CONNECT,
-  SUCCESS,
-  ERROR,
+export enum BluetoothError {
   INTERRUPTED,
+  FAILED_TO_INITIALIZE,
+  BLUETOOTH_DISABLED,
+  FAILED_TO_SCAN,
+  NO_DEVICES,
 }
 
-const queueScan = promise(async (task: () => unknown) => task(), 1);
-const queueConnect = promise(async (task: () => unknown) => task(), 1);
+export const NAME_INVALID = "[invalid]";
+export const MAX_DEVICE_COUNT = 20;
 
-export const bluetooth = proxy({
-  // SCANNING
-  scanResults: [] as ScanResult[],
-  scanning: false,
-  startScan(onError?: (error: BluetoothResponse) => unknown) {
-    bluetooth.scanning = true;
-    bluetooth.scanResults = [];
+export const bluetooth = {
+  async scanDevices(running: () => boolean) {
+    await sleep(2000);
 
-    queueScan.push(() => sleep(100));
-    queueScan.push(() => {
-      if (tabSettings.bluetoothEnabled) return;
-      bluetooth.stopScan();
-      onError?.(BluetoothResponse.BLUETOOTH_NOT_FOUND);
+    if (!running()) {
+      throw BluetoothError.INTERRUPTED;
+    }
+
+    if (settingsPage.bluetoothInvalid) {
+      throw BluetoothError.FAILED_TO_INITIALIZE;
+    }
+
+    if (settingsPage.bluetoothDisabled) {
+      throw BluetoothError.BLUETOOTH_DISABLED;
+    }
+
+    if (settingsPage.bluetoothNoScan) {
+      throw BluetoothError.FAILED_TO_SCAN;
+    }
+
+    if (settingsPage.bluetoothNoClient) {
+      throw BluetoothError.NO_DEVICES;
+    }
+
+    return Array.from({ length: MAX_DEVICE_COUNT }).map(() => {
+      const name = randBoolean() ? NAME_INVALID : randProductName();
+      const deviceId = randMac();
+      return { deviceId, name } as BleDevice;
     });
-
-    let resultCount = 0;
-    const addScanResult = () => {
-      if (++resultCount > SCAN_RESULT_MAX || !tabSettings.devicesEnabled) {
-        queueScan.push(bluetooth.stopScan);
-        return;
-      }
-
-      queueScan.push(() => {
-        const invalid = randBoolean();
-        bluetooth.scanResults.push({
-          device: {
-            deviceId: randMac(),
-            name: invalid ? INVALID : randProductName(),
-          },
-        });
-      });
-
-      queueScan.push(() => sleep(randNumber({ min: 100, max: 500 })));
-      queueScan.push(addScanResult);
-    };
-
-    addScanResult();
   },
-  stopScan() {
-    bluetooth.scanning = false;
-    queueScan.kill();
-  },
-  reset() {
-    bluetooth.stopScan();
-    bluetooth.scanResults = [];
-  },
-
-  // CONNECTING
-  connect(device: BleDevice, onFinish: (error: boolean) => unknown) {
-    queueConnect.push(() => sleep(1500));
-    queueConnect.push(() => onFinish(device.name === INVALID));
-  },
-  stopConnect() {
-    queueConnect.kill();
-  },
-});
+};

@@ -1,10 +1,9 @@
 import { CssBaseline } from "@mui/material";
 import { proxy, useSnapshot } from "valtio";
-import { ThemeModeProvider } from "../components/ThemeModeProvider";
-import { AddDevicePage } from "./AddDevicePage";
-import { HomePage } from "./HomePage";
-import { SettingsPage } from "./SettingsPage";
-import { settingsPage } from "./SettingsPage/state";
+import { AddDevicePage } from "./pages/AddDevicePage";
+import { HomePage } from "./pages/HomePage";
+import { SettingsPage, settingsPage } from "./pages/SettingsPage";
+import { ThemeModeProvider } from "./ThemeModeProvider";
 
 export enum AppPage {
   HOME,

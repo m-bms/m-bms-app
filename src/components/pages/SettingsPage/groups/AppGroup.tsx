@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { useSnapshot } from "valtio";
 import { Group, ItemType } from "../Group";
-import { settingsPage } from "../state";
+import { settingsPage } from "../index";
 import { ThemeMode } from "/src/utils/theme";
 
 export const AppGroup = memo(() => {

@@ -10,13 +10,23 @@ export const proxyWithStorage = <T extends Record<string, unknown>>(
   const state = proxy<T>({ ...data, ...(local && JSON.parse(local)) });
 
   if (keys.length) {
+    let changed = false;
+
     const saveLocal = () => {
+      if (!changed) return;
+      changed = false;
+
       const toSave = {} as Partial<T>;
       keys.forEach((key) => (toSave[key] = state[key]));
       localStorage.setItem(name, JSON.stringify(toSave));
     };
 
-    keys.forEach((key) => subscribeKey(state, key, saveLocal));
+    const queueSave = () => {
+      changed = true;
+      Promise.resolve().then(saveLocal);
+    };
+
+    keys.forEach((key) => subscribeKey(state, key, queueSave));
   } else {
     subscribe(state, () => localStorage.setItem(name, JSON.stringify(state)));
   }

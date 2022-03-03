@@ -2,6 +2,7 @@ import { useLayoutEffect } from "react";
 import { proxy, useSnapshot } from "valtio";
 import { IntroSubPage } from "./sub-pages/IntroSubPage";
 import { ScanDeviceSubPage } from "./sub-pages/ScanDeviceSubPage";
+import { SelectDeviceSubPage } from "./sub-pages/SelectDeviceSubPage";
 
 export enum SubPage {
   INTRO,
@@ -26,6 +27,7 @@ export const AddDevicePage = () => {
     <>
       {subPage === SubPage.INTRO && <IntroSubPage />}
       {subPage === SubPage.SCAN_DEVICE && <ScanDeviceSubPage />}
+      {subPage === SubPage.SELECT_DEVICE && <SelectDeviceSubPage />}
     </>
   );
 };
