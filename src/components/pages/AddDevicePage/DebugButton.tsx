@@ -19,7 +19,7 @@ export const BluetoothDebugButton: BasePageHeaderButton = {
         />
       )}
     >
-      <List children={<BluetoothGroup disableTitle />} />
+      <List children={<BluetoothGroup disableTitle disableGutters />} />
     </BaseDialog>
   ),
 };
@@ -38,7 +38,7 @@ export const WifiDebugButton: BasePageHeaderButton = {
         />
       )}
     >
-      <List children={<WifiGroup disableTitle />} />
+      <List children={<WifiGroup disableTitle disableGutters />} />
     </BaseDialog>
   ),
 };
@@ -58,8 +58,8 @@ export const HardwareDebugButton: BasePageHeaderButton = {
       )}
     >
       <List>
-        <BluetoothGroup />
-        <WifiGroup />
+        <BluetoothGroup disableGutters />
+        <WifiGroup disableGutters />
       </List>
     </BaseDialog>
   ),

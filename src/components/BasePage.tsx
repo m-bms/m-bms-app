@@ -12,7 +12,7 @@ import { ReactNode } from "react";
 import { useSnapshot } from "valtio";
 import { visualView } from "../utils/visual-view";
 import { BaseSvgIcon } from "/src/components/BaseSvgIcon";
-import { flatDefined } from "/src/utils/common";
+import { ArrayLike, flatDefined } from "/src/utils/common";
 
 export type BasePageHeaderButton = {
   component?: ReactNode;
@@ -23,8 +23,8 @@ export type BasePageHeaderButton = {
 export type BasePageProps = {
   header?: {
     title?: string;
-    headButtons?: BasePageHeaderButton | BasePageHeaderButton[];
-    tailButtons?: BasePageHeaderButton | BasePageHeaderButton[];
+    headButtons?: ArrayLike<BasePageHeaderButton>;
+    tailButtons?: ArrayLike<BasePageHeaderButton>;
   };
   footer?: ReactNode;
   children?: ReactNode;

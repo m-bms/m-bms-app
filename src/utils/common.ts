@@ -16,3 +16,5 @@ export const createQueue = () => {
 export const flatDefined = <T>(value: T | T[]) => {
   return [value].flat().filter(Boolean) as Exclude<T, undefined>[];
 };
+
+export type ArrayLike<T> = T | T[];

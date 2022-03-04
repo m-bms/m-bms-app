@@ -1,8 +1,10 @@
 import { useSnapshot } from "valtio";
 import { settingsPage } from "..";
-import { BaseGroup, ItemType } from "../BaseGroup";
+import { BaseGroup, BaseGroupProps, ItemType } from "../BaseGroup";
 
-export const BluetoothGroup = (props: { disableTitle?: boolean }) => {
+export const BluetoothGroup = (
+  props: Omit<BaseGroupProps, "title" | "items">
+) => {
   const {
     bluetoothInvalid,
     bluetoothDisabled,
@@ -12,8 +14,8 @@ export const BluetoothGroup = (props: { disableTitle?: boolean }) => {
 
   return (
     <BaseGroup
+      {...props}
       title="Bluetooth"
-      disableTitle={props.disableTitle}
       items={[
         {
           type: ItemType.SWITCH,

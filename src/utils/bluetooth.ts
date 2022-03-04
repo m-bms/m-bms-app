@@ -56,7 +56,7 @@ export const bluetooth = {
       throw BluetoothError.INTERRUPTED;
     }
 
-    if (device.name?.search(NAME_INVALID) !== -1) {
+    if (device.name!.indexOf(NAME_INVALID) !== -1) {
       throw BluetoothError.FAILED_TO_CONNECT;
     }
   },

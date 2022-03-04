@@ -19,8 +19,9 @@ export enum ItemType {
 }
 
 export type BaseGroupProps = {
-  title: string;
+  title?: string;
   disableTitle?: boolean;
+  disableGutters?: boolean;
   items: Array<
     {
       label: string;
@@ -59,7 +60,11 @@ export const BaseGroup = (props: BaseGroupProps) => {
       )}
 
       {props.items.map((item) => (
-        <ListItem key={item.label} sx={{ alignItems: "baseline" }}>
+        <ListItem
+          key={item.label}
+          disableGutters={props.disableGutters}
+          sx={{ alignItems: "baseline" }}
+        >
           <ListItemText children={item.label} />
 
           {item.type === ItemType.TEXT && (

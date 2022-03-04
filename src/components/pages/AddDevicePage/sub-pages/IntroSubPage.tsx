@@ -1,6 +1,6 @@
 import { addDevicePage, SubPage } from "..";
 import { BaseBannerSubPage } from "../BaseBannerSubPage";
-import { WifiDebugButton } from "../DebugButton";
+import { BluetoothDebugButton } from "../DebugButton";
 import { app, AppPage } from "/src/components/App";
 
 export const IntroSubPage = () => {
@@ -10,7 +10,7 @@ export const IntroSubPage = () => {
       text="The app will connect to BMS device via Bluetooth,
         then instructs it to join the desired WiFi network."
       header={{
-        tailButtons: WifiDebugButton,
+        tailButtons: BluetoothDebugButton,
       }}
       footerButtonLeft={{
         text: "Cancel",

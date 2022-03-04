@@ -1,15 +1,15 @@
 import { useSnapshot } from "valtio";
 import { settingsPage } from "..";
-import { BaseGroup, ItemType } from "../BaseGroup";
+import { BaseGroup, BaseGroupProps, ItemType } from "../BaseGroup";
 
-export const WifiGroup = (props: { disableTitle?: boolean }) => {
+export const WifiGroup = (props: Omit<BaseGroupProps, "title" | "items">) => {
   const { wifiInvalid, wifiDisabled, wifiNoScan, wifiNoNetwork } =
     useSnapshot(settingsPage);
 
   return (
     <BaseGroup
+      {...props}
       title="WiFi"
-      disableTitle={props.disableTitle}
       items={[
         {
           type: ItemType.SWITCH,
