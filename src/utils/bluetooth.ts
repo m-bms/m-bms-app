@@ -1,7 +1,8 @@
 import { BleDevice } from "@capacitor-community/bluetooth-le";
 import { randBoolean, randMac, randProductName } from "@ngneat/falso";
 import { settingsPage } from "../components/pages/SettingsPage";
-import { sleep } from "./common";
+import { compareStrings, sleep } from "./common";
+import { addJoinedDevice } from "./wifi";
 
 export enum BluetoothError {
   INTERRUPTED,
@@ -9,9 +10,10 @@ export enum BluetoothError {
   BLUETOOTH_DISABLED,
   FAILED_TO_SCAN,
   NO_DEVICES,
+  FAILED_TO_CONNECT,
 }
 
-export const NAME_INVALID = "[invalid]";
+export const NAME_INVALID = "[INVALID]";
 export const MAX_DEVICE_COUNT = 20;
 
 export const bluetooth = {
@@ -38,10 +40,33 @@ export const bluetooth = {
       throw BluetoothError.NO_DEVICES;
     }
 
-    return Array.from({ length: MAX_DEVICE_COUNT }).map(() => {
-      const name = randBoolean() ? NAME_INVALID : randProductName();
-      const deviceId = randMac();
-      return { deviceId, name } as BleDevice;
-    });
+    return Array.from({ length: MAX_DEVICE_COUNT })
+      .map(() => {
+        const suffix = randBoolean() ? NAME_INVALID : "";
+        const name = `${randProductName()} ${suffix}`;
+        const deviceId = randMac();
+        return { deviceId, name } as BleDevice;
+      })
+      .sort((a, b) => compareStrings(a.name, b.name));
+  },
+  async connectDevice(device: BleDevice, running: () => boolean) {
+    await sleep(2000);
+
+    if (!running()) {
+      throw BluetoothError.INTERRUPTED;
+    }
+
+    if (device.name?.search(NAME_INVALID) !== -1) {
+      throw BluetoothError.FAILED_TO_CONNECT;
+    }
+  },
+  async joinDevice(device: BleDevice, running: () => boolean) {
+    await sleep(2000);
+
+    if (!running()) {
+      throw BluetoothError.INTERRUPTED;
+    }
+
+    addJoinedDevice(device);
   },
 };

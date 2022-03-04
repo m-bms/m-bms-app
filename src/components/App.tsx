@@ -1,4 +1,4 @@
-import { CssBaseline } from "@mui/material";
+import { Box, CssBaseline } from "@mui/material";
 import { proxy, useSnapshot } from "valtio";
 import { AddDevicePage } from "./pages/AddDevicePage";
 import { HomePage } from "./pages/HomePage";
@@ -10,6 +10,12 @@ export enum AppPage {
   SETTINGS,
   ADD_DEVICE,
 }
+
+export const appPageMap = {
+  [AppPage.HOME]: <HomePage />,
+  [AppPage.SETTINGS]: <SettingsPage />,
+  [AppPage.ADD_DEVICE]: <AddDevicePage />,
+};
 
 export const app = proxy({
   page: AppPage.HOME,
@@ -36,9 +42,7 @@ export const App = () => {
     <ThemeModeProvider mode={themeMode}>
       <CssBaseline />
 
-      {page === AppPage.HOME && <HomePage />}
-      {page === AppPage.SETTINGS && <SettingsPage />}
-      {page === AppPage.ADD_DEVICE && <AddDevicePage />}
+      <Box>{appPageMap[page]}</Box>
     </ThemeModeProvider>
   );
 };

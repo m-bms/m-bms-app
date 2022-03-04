@@ -1,3 +1,4 @@
+import { BleDevice } from "@capacitor-community/bluetooth-le";
 import {
   CircularProgress,
   List,
@@ -14,12 +15,12 @@ import { app, AppPage } from "/src/components/App";
 import { BasePage } from "/src/components/BasePage";
 import { LightButton } from "/src/components/LightButton";
 import { sleep } from "/src/utils/common";
-import { ConnectedDevice, wifi } from "/src/utils/wifi";
+import { wifi } from "/src/utils/wifi";
 
 export const SCAN_INTERVAL = 10000;
 
 export const HomePage = () => {
-  const [devices, setDevices] = useState<ConnectedDevice[]>([]);
+  const [devices, setDevices] = useState<BleDevice[]>([]);
   const [scanning, setScanning] = useState(true);
 
   useAsyncEffect((running) => {
@@ -27,7 +28,7 @@ export const HomePage = () => {
       if (!running()) return;
       setScanning(true);
 
-      const scanneds = await wifi.scanDevices();
+      const scanneds = await wifi.scanDevices(running);
       if (!running()) return;
 
       setDevices(scanneds);
@@ -43,18 +44,14 @@ export const HomePage = () => {
   return (
     <BasePage
       header={{
-        headButtons: [
-          {
-            iconRaw: IconSettings,
-            onClick: () => (app.page = AppPage.SETTINGS),
-          },
-        ],
-        tailButtons: [
-          {
-            iconRaw: IconAdd,
-            onClick: () => (app.page = AppPage.ADD_DEVICE),
-          },
-        ],
+        headButtons: {
+          iconRaw: IconSettings,
+          onClick: () => (app.page = AppPage.SETTINGS),
+        },
+        tailButtons: {
+          iconRaw: IconAdd,
+          onClick: () => (app.page = AppPage.ADD_DEVICE),
+        },
       }}
     >
       {!devices.length ? (
@@ -91,8 +88,8 @@ export const HomePage = () => {
       ) : (
         <List>
           {devices.map((device) => (
-            <ListItem key={device.id}>
-              <ListItemText>{device.name}</ListItemText>
+            <ListItem key={device.deviceId}>
+              <ListItemText primary={device.name} secondary="WIP" />
             </ListItem>
           ))}
         </List>

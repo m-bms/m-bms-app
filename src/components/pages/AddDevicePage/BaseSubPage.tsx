@@ -1,50 +1,31 @@
-import { Box, Button, LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { ReactNode } from "react";
-import IconDismiss from "~icons/fluent/dismiss-24-regular?raw";
-import { app, AppPage } from "../../App";
-import { BasePage } from "../../BasePage";
-import { BaseSvgIcon } from "../../BaseSvgIcon";
+import { BaseDialog, BaseDialogProps } from "../../BaseDialog";
+import { BasePage, BasePageProps } from "../../BasePage";
 import { LightButton } from "../../LightButton";
 
-export enum SubPageType {
-  BANNER,
-}
+export type BaseSubPageProps = {
+  header?: BasePageProps["header"];
+  title: string;
+  titleUnderline?: boolean;
+  scrollable?: boolean;
+  footerButtonLeft?: {
+    text: string;
+    onClick?: () => unknown;
+  };
+  footerButtonRight?: {
+    text: string;
+    disabled?: boolean;
+    onClick?: () => unknown;
+    dialog?: Omit<BaseDialogProps, "trigger">;
+  };
+  children?: ReactNode;
+};
 
-export const BaseSubPage = (
-  props: {
-    title: string;
-    dismissButton?: boolean;
-    footerButtonLeft?: {
-      text: string;
-      onClick?: () => unknown;
-    };
-    footerButtonRight?: {
-      text: string;
-      disabled?: boolean;
-      onClick?: () => unknown;
-    };
-    children?: ReactNode;
-  } & {
-    type: SubPageType.BANNER;
-    text?: string;
-    iconRaw?: string;
-    progress?: boolean;
-  }
-) => {
+export const BaseSubPage = (props: BaseSubPageProps) => {
   return (
     <BasePage
-      header={
-        !props.dismissButton
-          ? undefined
-          : {
-              headButtons: [
-                {
-                  iconRaw: IconDismiss,
-                  onClick: () => (app.page = AppPage.HOME),
-                },
-              ],
-            }
-      }
+      header={props.header}
       footer={
         <>
           {props.footerButtonLeft && (
@@ -56,18 +37,38 @@ export const BaseSubPage = (
 
           <Box flex={1} />
 
-          {props.footerButtonRight && (
-            <LightButton
-              disabled={props.footerButtonRight.disabled}
-              onClick={props.footerButtonRight.onClick}
-              children={props.footerButtonRight.text}
-            />
-          )}
+          {props.footerButtonRight &&
+            (props.footerButtonRight.dialog ? (
+              <BaseDialog
+                {...props.footerButtonRight.dialog}
+                trigger={(openDialog) => (
+                  <LightButton
+                    disabled={props.footerButtonRight!.disabled}
+                    onClick={openDialog}
+                    children={props.footerButtonRight!.text}
+                  />
+                )}
+              />
+            ) : (
+              <LightButton
+                disabled={props.footerButtonRight.disabled}
+                onClick={props.footerButtonRight.onClick}
+                children={props.footerButtonRight.text}
+              />
+            ))}
         </>
       }
     >
       <Stack height={1} overflow="hidden">
-        <Stack justifyContent="flex-end" flex={1}>
+        <Stack
+          flex={2}
+          justifyContent="flex-end"
+          borderBottom={
+            props.titleUnderline
+              ? (theme) => `1px solid ${theme.palette.primary.main}`
+              : "none"
+          }
+        >
           <Typography
             variant="h5"
             align="center"
@@ -76,46 +77,14 @@ export const BaseSubPage = (
           />
         </Stack>
 
-        <Stack flex={6} alignItems="center">
-          {props.type === SubPageType.BANNER && (
-            <>
-              <Box mx={3} flex={3}>
-                {!!props.text && (
-                  <Typography
-                    variant="body1"
-                    align="center"
-                    color="text.secondary"
-                    children={props.text}
-                  />
-                )}
-              </Box>
+        <Stack
+          flex={8}
+          alignItems="center"
+          overflow={props.scrollable ? "auto" : "hidden"}
+          children={props.children}
+        />
 
-              <Box width={100} height={100} my={4}>
-                {!!props.iconRaw && (
-                  <BaseSvgIcon
-                    sx={{
-                      width: 1,
-                      height: 1,
-                      color: (theme) => theme.palette.text.disabled,
-                    }}
-                    raw={props.iconRaw}
-                  />
-                )}
-              </Box>
-
-              <Box maxWidth={1} flex={2}>
-                {props.progress && (
-                  <LinearProgress
-                    sx={{
-                      width: 200,
-                      maxWidth: 1,
-                    }}
-                  />
-                )}
-              </Box>
-            </>
-          )}
-        </Stack>
+        <Box flex={1} />
       </Stack>
     </BasePage>
   );

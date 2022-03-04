@@ -6,7 +6,8 @@ import IconErrorCircle from "~icons/fluent/error-circle-20-regular?raw";
 import IconWarning from "~icons/fluent/warning-20-regular?raw";
 import { addDevicePage, SubPage } from "..";
 import { app, AppPage } from "../../../App";
-import { BaseSubPage, SubPageType } from "../BaseSubPage";
+import { BaseBannerSubPage } from "../BaseBannerSubPage";
+import { BluetoothDebugButton } from "../DebugButton";
 import { selectDeviceSubPage } from "./SelectDeviceSubPage";
 import { bluetooth, BluetoothError } from "/src/utils/bluetooth";
 
@@ -35,7 +36,9 @@ export const ScanDeviceSubPage = () => {
   );
 
   const baseOptions = {
-    type: SubPageType.BANNER,
+    header: {
+      tailButtons: scanning ? undefined : BluetoothDebugButton,
+    },
     footerButtonLeft: {
       text: "Cancel",
       onClick: () => (app.page = AppPage.HOME),
@@ -51,14 +54,14 @@ export const ScanDeviceSubPage = () => {
   };
 
   return scanning ? (
-    <BaseSubPage
+    <BaseBannerSubPage
       {...baseOptions}
       title="Scanning devices"
       iconRaw={IconBluetooth}
       progress
     />
   ) : error === BluetoothError.FAILED_TO_INITIALIZE ? (
-    <BaseSubPage
+    <BaseBannerSubPage
       title="Bluetooth failed"
       text="Unable to detect Bluetooth hardware.
         Make sure your device supports Bluetooth."
@@ -66,21 +69,21 @@ export const ScanDeviceSubPage = () => {
       {...errorOptions}
     />
   ) : error === BluetoothError.BLUETOOTH_DISABLED ? (
-    <BaseSubPage
+    <BaseBannerSubPage
       {...errorOptions}
       title="Bluetooth disabled"
       text="Make sure to have your Bluetooth on."
       iconRaw={IconBluetoothDisabled}
     />
   ) : error === BluetoothError.FAILED_TO_SCAN ? (
-    <BaseSubPage
+    <BaseBannerSubPage
       {...errorOptions}
       title="Scan failed"
       text="Unable to scan devices via Bluetooth."
       iconRaw={IconErrorCircle}
     />
   ) : error === BluetoothError.NO_DEVICES ? (
-    <BaseSubPage
+    <BaseBannerSubPage
       {...errorOptions}
       title="No devices"
       text="There are no available BMS devices."

@@ -1,10 +1,10 @@
 import { memo } from "react";
-import { Group, ItemType } from "../Group";
+import { BaseGroup, ItemType } from "../BaseGroup";
 
 export const DebugGroup = memo(() => {
   return (
-    <Group
-      header="Debug"
+    <BaseGroup
+      title="Debug"
       items={[
         {
           type: ItemType.BUTTON,

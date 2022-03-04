@@ -9,34 +9,37 @@ import {
   Typography,
 } from "@mui/material";
 import { ReactNode } from "react";
+import { useSnapshot } from "valtio";
+import { visualView } from "../utils/visual-view";
 import { BaseSvgIcon } from "/src/components/BaseSvgIcon";
+import { flatDefined } from "/src/utils/common";
+
+export type BasePageHeaderButton = {
+  component?: ReactNode;
+  iconRaw?: string;
+  onClick?: () => unknown;
+};
 
 export type BasePageProps = {
   header?: {
     title?: string;
-    headButtons?: Array<{
-      iconRaw: string;
-      onClick?: () => unknown;
-    }>;
-    tailButtons?: Array<{
-      iconRaw: string;
-      onClick?: () => unknown;
-    }>;
-    headAction?: ReactNode;
-    tailAction?: ReactNode;
+    headButtons?: BasePageHeaderButton | BasePageHeaderButton[];
+    tailButtons?: BasePageHeaderButton | BasePageHeaderButton[];
   };
   footer?: ReactNode;
   children?: ReactNode;
 };
 
 export const BasePage = (props: BasePageProps) => {
+  const { height } = useSnapshot(visualView);
+
   return (
     <Grow in>
-      <Box width="100vw" height="100vh">
-        <AppBar elevation={0} color="transparent">
+      <Stack width="100vw" height={`${height}px`}>
+        <AppBar position="static" elevation={0} color="transparent">
           <Toolbar variant="dense">
             <Stack flex={1} direction="row">
-              {(props.header?.headButtons ?? []).map((button) => (
+              {flatDefined(props.header?.headButtons).map((button) => (
                 <IconButton
                   key={button.iconRaw}
                   edge="start"
@@ -50,29 +53,23 @@ export const BasePage = (props: BasePageProps) => {
             <Typography variant="h6" children={props.header?.title} />
 
             <Stack flex={1} direction="row-reverse">
-              {(props.header?.tailButtons ?? []).map((button) => (
-                <IconButton
-                  key={button.iconRaw}
-                  edge="end"
-                  size="small"
-                  onClick={button.onClick}
-                  children={<BaseSvgIcon raw={button.iconRaw} />}
-                />
-              ))}
+              {flatDefined(props.header?.tailButtons).map(
+                (button) =>
+                  button.component ?? (
+                    <IconButton
+                      key={button.iconRaw}
+                      edge="end"
+                      size="small"
+                      onClick={button.onClick}
+                      children={<BaseSvgIcon raw={button.iconRaw} />}
+                    />
+                  )
+              )}
             </Stack>
           </Toolbar>
         </AppBar>
 
-        <Box
-          component="main"
-          sx={{
-            width: 1,
-            position: "fixed",
-            top: 48,
-            bottom: props.footer ? 64 : 0,
-            overflow: "auto",
-          }}
-        >
+        <Box component="main" flex={1} overflow="auto">
           <Container
             maxWidth="xs"
             disableGutters
@@ -87,19 +84,17 @@ export const BasePage = (props: BasePageProps) => {
         {props.footer && (
           <AppBar
             component="footer"
+            position="static"
             elevation={0}
             color="transparent"
-            sx={{
-              top: "auto",
-              bottom: 16,
-            }}
+            sx={{ pb: 2 }}
           >
             <Container>
               <Toolbar variant="dense" disableGutters children={props.footer} />
             </Container>
           </AppBar>
         )}
-      </Box>
+      </Stack>
     </Grow>
   );
 };

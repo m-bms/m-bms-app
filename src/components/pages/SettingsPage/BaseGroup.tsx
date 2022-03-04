@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ComponentProps } from "react";
-import { DialogRadioGroup } from "/src/components/DialogRadioGroup";
+import { RadioDialog } from "../../RadioDialog";
 import { IconArrowDropDown } from "/src/components/IconArrowDropDown";
 import { SwitchAndroid12 } from "/src/components/SwitchAndroid12";
 
@@ -18,8 +18,9 @@ export enum ItemType {
   RADIO = "radio",
 }
 
-export const Group = (props: {
-  header: string;
+export type BaseGroupProps = {
+  title: string;
+  disableTitle?: boolean;
   items: Array<
     {
       label: string;
@@ -43,15 +44,19 @@ export const Group = (props: {
           type: ItemType.RADIO;
           value: string;
         } & Pick<
-          ComponentProps<typeof DialogRadioGroup>,
+          ComponentProps<typeof RadioDialog>,
           "title" | "options" | "value" | "onChange"
         >)
     )
   >;
-}) => {
+};
+
+export const BaseGroup = (props: BaseGroupProps) => {
   return (
     <>
-      <ListSubheader disableSticky children={props.header} />
+      {!props.disableTitle && (
+        <ListSubheader disableSticky children={props.title} />
+      )}
 
       {props.items.map((item) => (
         <ListItem key={item.label} sx={{ alignItems: "baseline" }}>
@@ -85,7 +90,7 @@ export const Group = (props: {
 
           {item.type === ItemType.RADIO && (
             <ListItemSecondaryAction>
-              <DialogRadioGroup
+              <RadioDialog
                 title={item.title}
                 options={item.options}
                 value={item.value}

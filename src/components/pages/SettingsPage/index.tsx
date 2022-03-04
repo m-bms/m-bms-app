@@ -1,9 +1,12 @@
+export { BluetoothGroup, WifiGroup };
+
 import { Divider, List } from "@mui/material";
 import IconArrowLeft from "~icons/fluent/arrow-left-24-regular?raw";
 import { AppGroup } from "./groups/AppGroup";
 import { BluetoothGroup } from "./groups/BluetoothGroup";
 import { DebugGroup } from "./groups/DebugGroup";
 import { InfoGroup } from "./groups/InfoGroup";
+import { WifiGroup } from "./groups/WifiGroup";
 import { app, AppPage } from "/src/components/App";
 import { BasePage } from "/src/components/BasePage";
 import { ThemeMode } from "/src/components/ThemeModeProvider";
@@ -15,6 +18,10 @@ export const settingsPage = proxyWithStorage("settings-page", {
   bluetoothDisabled: false,
   bluetoothNoScan: false,
   bluetoothNoClient: false,
+  wifiInvalid: false,
+  wifiDisabled: false,
+  wifiNoScan: false,
+  wifiNoNetwork: false,
 
   reset() {
     settingsPage.themeMode = ThemeMode.DARK;
@@ -22,6 +29,10 @@ export const settingsPage = proxyWithStorage("settings-page", {
     settingsPage.bluetoothDisabled = false;
     settingsPage.bluetoothNoScan = false;
     settingsPage.bluetoothNoClient = false;
+    settingsPage.wifiInvalid = false;
+    settingsPage.wifiDisabled = false;
+    settingsPage.wifiNoScan = false;
+    settingsPage.wifiNoNetwork = false;
   },
 });
 
@@ -30,12 +41,10 @@ export const SettingsPage = () => {
     <BasePage
       header={{
         title: "Settings",
-        headButtons: [
-          {
-            iconRaw: IconArrowLeft,
-            onClick: () => (app.page = AppPage.HOME),
-          },
-        ],
+        headButtons: {
+          iconRaw: IconArrowLeft,
+          onClick: () => (app.page = AppPage.HOME),
+        },
       }}
     >
       <List>
@@ -46,6 +55,8 @@ export const SettingsPage = () => {
         <DebugGroup />
         <Divider />
         <BluetoothGroup />
+        <Divider />
+        <WifiGroup />
       </List>
     </BasePage>
   );

@@ -2,49 +2,45 @@ import { useSnapshot } from "valtio";
 import { settingsPage } from "..";
 import { BaseGroup, ItemType } from "../BaseGroup";
 
-export const BluetoothGroup = (props: { disableTitle?: boolean }) => {
-  const {
-    bluetoothInvalid,
-    bluetoothDisabled,
-    bluetoothNoScan,
-    bluetoothNoClient,
-  } = useSnapshot(settingsPage);
+export const WifiGroup = (props: { disableTitle?: boolean }) => {
+  const { wifiInvalid, wifiDisabled, wifiNoScan, wifiNoNetwork } =
+    useSnapshot(settingsPage);
 
   return (
     <BaseGroup
-      title="Bluetooth"
+      title="WiFi"
       disableTitle={props.disableTitle}
       items={[
         {
           type: ItemType.SWITCH,
           label: "Invalid",
-          checked: bluetoothInvalid,
+          checked: wifiInvalid,
           onClick() {
-            settingsPage.bluetoothInvalid = !bluetoothInvalid;
+            settingsPage.wifiInvalid = !wifiInvalid;
           },
         },
         {
           type: ItemType.SWITCH,
           label: "Disabled",
-          checked: bluetoothDisabled,
+          checked: wifiDisabled,
           onClick() {
-            settingsPage.bluetoothDisabled = !bluetoothDisabled;
+            settingsPage.wifiDisabled = !wifiDisabled;
           },
         },
         {
           type: ItemType.SWITCH,
           label: "No scan",
-          checked: bluetoothNoScan,
+          checked: wifiNoScan,
           onClick() {
-            settingsPage.bluetoothNoScan = !bluetoothNoScan;
+            settingsPage.wifiNoScan = !wifiNoScan;
           },
         },
         {
           type: ItemType.SWITCH,
-          label: "No clients",
-          checked: bluetoothNoClient,
+          label: "No networks",
+          checked: wifiNoNetwork,
           onClick() {
-            settingsPage.bluetoothNoClient = !bluetoothNoClient;
+            settingsPage.wifiNoNetwork = !wifiNoNetwork;
           },
         },
       ]}

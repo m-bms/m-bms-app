@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { useSnapshot } from "valtio";
-import { Group, ItemType } from "../Group";
+import { BaseGroup, ItemType } from "../BaseGroup";
 import { settingsPage } from "../index";
 import { ThemeMode } from "/src/utils/theme";
 
@@ -8,8 +8,8 @@ export const AppGroup = memo(() => {
   const { themeMode } = useSnapshot(settingsPage);
 
   return (
-    <Group
-      header="App"
+    <BaseGroup
+      title="App"
       items={[
         {
           type: ItemType.RADIO,

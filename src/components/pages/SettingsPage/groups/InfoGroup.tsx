@@ -1,10 +1,10 @@
 import { memo } from "react";
-import { Group, ItemType } from "../Group";
+import { BaseGroup, ItemType } from "../BaseGroup";
 
 export const InfoGroup = memo(() => {
   return (
-    <Group
-      header="Info"
+    <BaseGroup
+      title="Info"
       items={[
         { type: ItemType.TEXT, label: "App Name", text: "Mermaid BMS" },
         { type: ItemType.TEXT, label: "App Version", text: "0.0.0" },

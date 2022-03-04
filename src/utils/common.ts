@@ -4,11 +4,15 @@ export const sleep = (duration: number) => {
   return new Promise((resolve) => setTimeout(resolve, duration));
 };
 
-export const compareStrings = (a: string, b: string, reversed?: boolean) => {
-  const result = a > b ? 1 : a < b ? -1 : 0;
+export const compareStrings = (a = "", b = "", reversed?: boolean) => {
+  const result = a > b ? -1 : a < b ? 1 : 0;
   return reversed ? result : -result;
 };
 
 export const createQueue = () => {
   return promiseQueue(async (task: () => unknown) => task(), 1);
+};
+
+export const flatDefined = <T>(value: T | T[]) => {
+  return [value].flat().filter(Boolean) as Exclude<T, undefined>[];
 };

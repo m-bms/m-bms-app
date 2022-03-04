@@ -1,75 +1,67 @@
-import { randMac, randProductName } from "@ngneat/falso";
-import { promise } from "fastq";
-import { sleep } from "./common";
+import { BleDevice } from "@capacitor-community/bluetooth-le";
+import { randFullName, randMac } from "@ngneat/falso";
+import { settingsPage } from "../components/pages/SettingsPage";
+import { compareStrings, sleep } from "./common";
 
-export enum WifiReponse {}
-
-export type WifiDevice = {
+export type WifiNetwork = {
   ssid: string;
   mac: string;
-  connected?: boolean;
+  current?: boolean;
 };
 
-const SCAN_RESULT_MAX = 10;
-export const WIFI_PASSWORD = "1234";
+export enum WifiError {
+  INTERRUPTED,
+  FAILED_TO_INITIALIZE,
+  HARDWARE_DISABLED,
+  FAILED_TO_SCAN_NETWORKS,
+  NO_NETWORKS,
+  FAILED_TO_CONNECT,
+}
 
-const queueScanNetwork = promise(async (task: () => unknown) => task(), 1);
-const queueScanDevice = promise(async (task: () => unknown) => task(), 1);
-const queueJoin = promise(async (task: () => unknown) => task(), 1);
+export const MAX_NETWORK_COUNT = 20;
 
 export const wifi = {
-  // SCANNING
-  scanResults: [] as WifiDevice[],
-  scanning: false,
-  startScan(onFinish: () => unknown) {
-    wifi.scanning = true;
-    wifi.scanResults = [];
-
-    queueScanNetwork.push(() => sleep(1500));
-    queueScanNetwork.push(() => {
-      wifi.scanResults = Array.from({ length: SCAN_RESULT_MAX }).map(
-        (_, index) => {
-          return {
-            ssid: randProductName(),
-            mac: randMac(),
-            connected: !index,
-          };
-        }
-      );
-
-      onFinish();
-    });
-  },
-  stopScan() {
-    wifi.scanning = false;
-    queueScanNetwork.kill();
-  },
-  reset() {
-    wifi.stopScan();
-    wifi.scanResults = [];
-  },
-
-  // JOIN
-  join(
-    device: WifiDevice,
-    password: string,
-    onFinish: (error: boolean) => unknown
-  ) {
-    queueJoin.push(() => sleep(1500));
-    queueJoin.push(() => onFinish(password !== WIFI_PASSWORD));
-  },
-  stopConnect() {
-    queueJoin.kill();
-  },
-
-  devices: [] as ConnectedDevice[],
-  async scanDevices() {
+  async scanNetworks(running: () => boolean) {
     await sleep(2000);
-    return wifi.devices;
+
+    if (!running()) {
+      throw WifiError.INTERRUPTED;
+    }
+
+    if (settingsPage.wifiInvalid) {
+      throw WifiError.FAILED_TO_INITIALIZE;
+    }
+
+    if (settingsPage.wifiDisabled) {
+      throw WifiError.HARDWARE_DISABLED;
+    }
+
+    if (settingsPage.wifiNoScan) {
+      throw WifiError.FAILED_TO_SCAN_NETWORKS;
+    }
+
+    if (settingsPage.wifiNoNetwork) {
+      throw WifiError.NO_NETWORKS;
+    }
+
+    return Array.from({ length: MAX_NETWORK_COUNT })
+      .map((_, index) => {
+        return {
+          ssid: randFullName(),
+          mac: randMac(),
+          current: !index,
+        } as WifiNetwork;
+      })
+      .sort((a, b) => compareStrings(a.ssid, b.ssid));
+  },
+  async scanDevices(running: () => boolean) {
+    await sleep(2000);
+    return JOINED_DEVICES;
   },
 };
 
-export type ConnectedDevice = {
-  name: string;
-  id: string;
+const JOINED_DEVICES = [] as BleDevice[];
+
+export const addJoinedDevice = (device: BleDevice) => {
+  JOINED_DEVICES.push(device);
 };

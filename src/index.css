@@ -1,3 +1,7 @@
+body {
+  overscroll-behavior: contain;
+}
+
 @keyframes rotate-half {
   from {
     transform: rotate(0deg);
