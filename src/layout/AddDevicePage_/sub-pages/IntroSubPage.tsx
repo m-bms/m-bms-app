@@ -1,7 +1,7 @@
-import { addDevicePage, SubPage } from "..";
+import { addDevicePage, SubPage } from "../../AddDevicePage";
+import { app, AppPage } from "../../App";
 import { BaseBannerSubPage } from "../BaseBannerSubPage";
 import { BluetoothDebugButton } from "../DebugButton";
-import { app, AppPage } from "/src/components/App";
 
 export const IntroSubPage = () => {
   return (

@@ -1,8 +1,8 @@
 import { memo } from "react";
 import { useSnapshot } from "valtio";
+import { ThemeMode } from "../../../components/ThemeModeProvider";
 import { BaseGroup, ItemType } from "../BaseGroup";
 import { settingsPage } from "../index";
-import { ThemeMode } from "/src/components/ThemeModeProvider";
 
 export const AppGroup = memo(() => {
   const { themeMode } = useSnapshot(settingsPage);

@@ -1,5 +1,5 @@
 import { Box, LinearProgress, Typography } from "@mui/material";
-import { BaseSvgIcon } from "../../BaseSvgIcon";
+import { UnpluginIcon } from "../../components/UnpluginIcon";
 import { BaseSubPage, BaseSubPageProps } from "./BaseSubPage";
 
 export const BaseBannerSubPage = (
@@ -26,7 +26,7 @@ export const BaseBannerSubPage = (
 
       <Box width={100} height={100} my={4}>
         {!!props.iconRaw && (
-          <BaseSvgIcon
+          <UnpluginIcon
             sx={{
               width: 1,
               height: 1,

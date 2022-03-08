@@ -1,6 +1,6 @@
 import { BleDevice } from "@capacitor-community/bluetooth-le";
 import { randFullName, randMac } from "@ngneat/falso";
-import { settingsPage } from "../components/pages/SettingsPage";
+import { settingsPage } from "../layout/SettingsPage";
 import { compareStrings, sleep } from "./common";
 
 export type WifiNetwork = {

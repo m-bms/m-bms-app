@@ -1,8 +1,8 @@
 import { IconButton, List } from "@mui/material";
 import IconBug from "~icons/fluent/bug-24-regular?raw";
-import { BaseDialog } from "../../BaseDialog";
-import { BasePageHeaderButton } from "../../BasePage";
-import { BaseSvgIcon } from "../../BaseSvgIcon";
+import { BaseDialog } from "../../components/BaseDialog";
+import { BasePageHeaderButton } from "../../components/BasePage";
+import { UnpluginIcon } from "../../components/UnpluginIcon";
 import { BluetoothGroup, WifiGroup } from "../SettingsPage";
 
 export const BluetoothDebugButton: BasePageHeaderButton = {
@@ -15,7 +15,7 @@ export const BluetoothDebugButton: BasePageHeaderButton = {
           edge="end"
           size="small"
           onClick={openDialog}
-          children={<BaseSvgIcon raw={IconBug} />}
+          children={<UnpluginIcon raw={IconBug} />}
         />
       )}
     >
@@ -34,7 +34,7 @@ export const WifiDebugButton: BasePageHeaderButton = {
           edge="end"
           size="small"
           onClick={openDialog}
-          children={<BaseSvgIcon raw={IconBug} />}
+          children={<UnpluginIcon raw={IconBug} />}
         />
       )}
     >
@@ -53,7 +53,7 @@ export const HardwareDebugButton: BasePageHeaderButton = {
           edge="end"
           size="small"
           onClick={openDialog}
-          children={<BaseSvgIcon raw={IconBug} />}
+          children={<UnpluginIcon raw={IconBug} />}
         />
       )}
     >

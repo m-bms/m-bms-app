@@ -3,7 +3,7 @@ import { useAsyncEffect } from "use-async-effect";
 import { useSnapshot } from "valtio";
 import IconBluetooth from "~icons/fluent/bluetooth-20-regular?raw";
 import IconCheckmarkCircle from "~icons/fluent/checkmark-circle-20-regular?raw";
-import { app, AppPage } from "../../../App";
+import { app, AppPage } from "../../App";
 import { BaseBannerSubPage } from "../BaseBannerSubPage";
 import { connectDeviceSubPage } from "./ConnectDeviceSubPage";
 import { bluetooth, BluetoothError } from "/src/utils/bluetooth";

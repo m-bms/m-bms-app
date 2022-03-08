@@ -4,11 +4,11 @@ import IconErrorCircle from "~icons/fluent/error-circle-20-regular?raw";
 import IconWarning from "~icons/fluent/warning-20-regular?raw";
 import IconWifi from "~icons/fluent/wifi-1-20-regular?raw";
 import IconWifiOff from "~icons/fluent/wifi-off-20-regular?raw";
-import { addDevicePage, SubPage } from "..";
+import { addDevicePage, SubPage } from "../../AddDevicePage";
+import { app, AppPage } from "../../App";
 import { BaseBannerSubPage } from "../BaseBannerSubPage";
 import { WifiDebugButton } from "../DebugButton";
 import { selectNetworkSubPage } from "./SelectNetworkSubPage";
-import { app, AppPage } from "/src/components/App";
 import { wifi, WifiError } from "/src/utils/wifi";
 
 export const ScanNetworkSubPage = () => {

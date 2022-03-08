@@ -14,11 +14,11 @@ import { proxy, useSnapshot } from "valtio";
 import IconDismiss from "~icons/fluent/dismiss-24-regular?raw";
 import IconEye from "~icons/fluent/eye-24-regular?raw";
 import IconEyeOff from "~icons/fluent/eye-off-24-regular?raw";
-import { addDevicePage, SubPage } from "..";
+import { UnpluginIcon } from "../../../components/UnpluginIcon";
+import { addDevicePage, SubPage } from "../../AddDevicePage";
+import { app, AppPage } from "../../App";
 import { BaseSubPage } from "../BaseSubPage";
 import { WifiDebugButton } from "../DebugButton";
-import { app, AppPage } from "/src/components/App";
-import { BaseSvgIcon } from "/src/components/BaseSvgIcon";
 import { WifiNetwork } from "/src/utils/wifi";
 
 export const selectNetworkSubPage = proxy({
@@ -85,7 +85,7 @@ export const SelectNetworkSubPage = () => {
                       <IconButton
                         onClick={() => setPasswordShow(!passwordShow)}
                         children={
-                          <BaseSvgIcon
+                          <UnpluginIcon
                             raw={passwordShow ? IconEye : IconEyeOff}
                           />
                         }

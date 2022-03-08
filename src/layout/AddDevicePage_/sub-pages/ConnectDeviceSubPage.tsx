@@ -4,8 +4,8 @@ import { useAsyncEffect } from "use-async-effect";
 import { proxy, useSnapshot } from "valtio";
 import IconBluetooth from "~icons/fluent/bluetooth-20-regular?raw";
 import IconErrorCircle from "~icons/fluent/error-circle-20-regular?raw";
-import { addDevicePage, SubPage } from "..";
-import { app, AppPage } from "../../../App";
+import { addDevicePage, SubPage } from "../../AddDevicePage";
+import { app, AppPage } from "../../App";
 import { BaseBannerSubPage } from "../BaseBannerSubPage";
 import { bluetooth, BluetoothError } from "/src/utils/bluetooth";
 

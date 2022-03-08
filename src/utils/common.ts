@@ -13,7 +13,7 @@ export const createQueue = () => {
   return promiseQueue(async (task: () => unknown) => task(), 1);
 };
 
-export const flatDefined = <T>(value: T | T[]) => {
+export const toArray = <T>(value: ArrayLike<T>) => {
   return [value].flat().filter(Boolean) as Exclude<T, undefined>[];
 };
 

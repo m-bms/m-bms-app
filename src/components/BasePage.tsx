@@ -11,8 +11,9 @@ import {
 import { ReactNode } from "react";
 import { useSnapshot } from "valtio";
 import { visualView } from "../utils/visual-view";
-import { BaseSvgIcon } from "/src/components/BaseSvgIcon";
-import { ArrayLike, flatDefined } from "/src/utils/common";
+import { Scrollable } from "./Scrollable";
+import { UnpluginIcon } from "./UnpluginIcon";
+import { ArrayLike, toArray } from "/src/utils/common";
 
 export type BasePageHeaderButton = {
   component?: ReactNode;
@@ -23,6 +24,8 @@ export type BasePageHeaderButton = {
 export type BasePageProps = {
   header?: {
     title?: string;
+    large?: boolean;
+    divider?: boolean;
     headButtons?: ArrayLike<BasePageHeaderButton>;
     tailButtons?: ArrayLike<BasePageHeaderButton>;
   };
@@ -30,58 +33,84 @@ export type BasePageProps = {
   children?: ReactNode;
 };
 
-export const BasePage = (props: BasePageProps) => {
+export const BasePage = ({ header = {}, footer, children }: BasePageProps) => {
   const { height } = useSnapshot(visualView);
 
   return (
     <Grow in>
       <Stack width="100vw" height={`${height}px`}>
-        <AppBar position="static" elevation={0} color="transparent">
-          <Toolbar variant="dense">
-            <Stack flex={1} direction="row">
-              {flatDefined(props.header?.headButtons).map((button) => (
-                <IconButton
-                  key={button.iconRaw}
-                  edge="start"
-                  size="small"
-                  onClick={button.onClick}
-                  children={<BaseSvgIcon raw={button.iconRaw} />}
-                />
-              ))}
-            </Stack>
+        <AppBar
+          position="static"
+          elevation={0}
+          color="transparent"
+          sx={{
+            flex: header.large ? 1 : 0,
+            borderBottom: (theme) =>
+              header.divider
+                ? `1px solid ${theme.palette.primary.main}`
+                : "none",
+          }}
+        >
+          <Container maxWidth="md" disableGutters>
+            <Toolbar
+              variant="dense"
+              sx={{
+                height: 1,
+                py: 1,
+                alignItems: "start",
+              }}
+            >
+              <Stack flex={1} direction="row">
+                {toArray(header.headButtons).map((button) => (
+                  <IconButton
+                    key={button.iconRaw}
+                    edge="start"
+                    size="small"
+                    onClick={button.onClick}
+                    children={<UnpluginIcon raw={button.iconRaw} />}
+                  />
+                ))}
+              </Stack>
 
-            <Typography variant="h6" children={props.header?.title} />
+              <Typography
+                variant={header.large ? "h5" : "h6"}
+                alignSelf={header.large ? "end" : "center"}
+                children={header.title}
+              />
 
-            <Stack flex={1} direction="row-reverse">
-              {flatDefined(props.header?.tailButtons).map(
-                (button) =>
-                  button.component ?? (
-                    <IconButton
-                      key={button.iconRaw}
-                      edge="end"
-                      size="small"
-                      onClick={button.onClick}
-                      children={<BaseSvgIcon raw={button.iconRaw} />}
-                    />
-                  )
-              )}
-            </Stack>
-          </Toolbar>
+              <Stack flex={1} direction="row-reverse">
+                {toArray(header.tailButtons).map(
+                  (button) =>
+                    button.component ?? (
+                      <IconButton
+                        key={button.iconRaw}
+                        edge="end"
+                        size="small"
+                        onClick={button.onClick}
+                        children={<UnpluginIcon raw={button.iconRaw} />}
+                      />
+                    )
+                )}
+              </Stack>
+            </Toolbar>
+          </Container>
         </AppBar>
 
-        <Box component="main" flex={1} overflow="auto">
-          <Container
-            maxWidth="xs"
-            disableGutters
-            sx={{
-              height: 2,
-              minHeight: 1,
-            }}
-            children={props.children}
-          />
+        <Box component="main" flex={5}>
+          <Scrollable>
+            <Container
+              maxWidth="sm"
+              disableGutters
+              sx={{
+                height: 2,
+                minHeight: 1,
+              }}
+              children={children}
+            />
+          </Scrollable>
         </Box>
 
-        {props.footer && (
+        {footer && (
           <AppBar
             component="footer"
             position="static"
@@ -89,8 +118,10 @@ export const BasePage = (props: BasePageProps) => {
             color="transparent"
             sx={{ pb: 2 }}
           >
-            <Container>
-              <Toolbar variant="dense" disableGutters children={props.footer} />
+            <Container maxWidth="md" disableGutters>
+              <Container>
+                <Toolbar variant="dense" disableGutters children={footer} />
+              </Container>
             </Container>
           </AppBar>
         )}

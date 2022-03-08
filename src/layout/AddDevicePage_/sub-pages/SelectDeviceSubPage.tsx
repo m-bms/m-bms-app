@@ -9,11 +9,11 @@ import {
 import { useState } from "react";
 import { proxy, useSnapshot } from "valtio";
 import IconDismiss from "~icons/fluent/dismiss-24-regular?raw";
-import { addDevicePage, SubPage } from "..";
+import { addDevicePage, SubPage } from "../../AddDevicePage";
+import { app, AppPage } from "../../App";
 import { BaseSubPage } from "../BaseSubPage";
 import { HardwareDebugButton } from "../DebugButton";
 import { connectDeviceSubPage } from "./ConnectDeviceSubPage";
-import { app, AppPage } from "/src/components/App";
 
 export const selectDeviceSubPage = proxy({
   devices: [] as BleDevice[],

@@ -7,9 +7,9 @@ import {
   Typography,
 } from "@mui/material";
 import { ComponentProps } from "react";
-import { RadioDialog } from "../../RadioDialog";
-import { IconArrowDropDown } from "/src/components/IconArrowDropDown";
-import { SwitchAndroid12 } from "/src/components/SwitchAndroid12";
+import { IconArrowDropDown } from "../../components/IconArrowDropDown";
+import { RadioDialog } from "../../components/RadioDialog";
+import { SwitchAndroid12 } from "../../components/SwitchAndroid12";
 
 export enum ItemType {
   TEXT = "text",

@@ -1,7 +1,7 @@
 import { SvgIcon as MuiSvgIcon, SvgIconProps } from "@mui/material";
 import { useMemo } from "react";
 
-export const BaseSvgIcon = (props: SvgIconProps & { raw?: string }) => {
+export const UnpluginIcon = (props: SvgIconProps & { raw?: string }) => {
   const { raw = "", ...rest } = props;
 
   const [viewBox, d] = useMemo(() => {
@@ -12,7 +12,7 @@ export const BaseSvgIcon = (props: SvgIconProps & { raw?: string }) => {
   }, [raw]);
 
   return (
-    <MuiSvgIcon viewBox={viewBox} {...rest}>
+    <MuiSvgIcon {...rest} viewBox={viewBox}>
       <path d={d} />
     </MuiSvgIcon>
   );

@@ -2,14 +2,14 @@ export { BluetoothGroup, WifiGroup };
 
 import { Divider, List } from "@mui/material";
 import IconArrowLeft from "~icons/fluent/arrow-left-24-regular?raw";
+import { BasePage } from "../../components/BasePage";
+import { ThemeMode } from "../../components/ThemeModeProvider";
+import { app, AppPage } from "../App";
 import { AppGroup } from "./groups/AppGroup";
 import { BluetoothGroup } from "./groups/BluetoothGroup";
 import { DebugGroup } from "./groups/DebugGroup";
 import { InfoGroup } from "./groups/InfoGroup";
 import { WifiGroup } from "./groups/WifiGroup";
-import { app, AppPage } from "/src/components/App";
-import { BasePage } from "/src/components/BasePage";
-import { ThemeMode } from "/src/components/ThemeModeProvider";
 import { proxyWithStorage } from "/src/utils/valtio";
 
 export const settingsPage = proxyWithStorage("settings-page", {

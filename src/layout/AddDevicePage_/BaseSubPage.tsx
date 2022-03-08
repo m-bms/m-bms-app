@@ -1,8 +1,8 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { ReactNode } from "react";
-import { BaseDialog, BaseDialogProps } from "../../BaseDialog";
-import { BasePage, BasePageProps } from "../../BasePage";
-import { LightButton } from "../../LightButton";
+import { BaseDialog, BaseDialogProps } from "../../components/BaseDialog";
+import { BasePage, BasePageProps } from "../../components/BasePage";
+import { LightButton } from "../../components/LightButton";
 
 export type BaseSubPageProps = {
   header?: BasePageProps["header"];
