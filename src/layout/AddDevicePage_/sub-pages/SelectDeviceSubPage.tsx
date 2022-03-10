@@ -28,11 +28,11 @@ export const SelectDeviceSubPage = () => {
       title="Select device"
       titleUnderline
       header={{
-        headButtons: {
+        startButtons: {
           iconRaw: IconDismiss,
           onClick: () => (app.page = AppPage.HOME),
         },
-        tailButtons: HardwareDebugButton,
+        endButtons: HardwareDebugButton,
       }}
       footerButtonLeft={{
         text: "Rescan",

@@ -10,7 +10,7 @@ export const IntroSubPage = () => {
       text="The app will connect to BMS device via Bluetooth,
         then instructs it to join the desired WiFi network."
       header={{
-        tailButtons: BluetoothDebugButton,
+        endButtons: BluetoothDebugButton,
       }}
       footerButtonLeft={{
         text: "Cancel",

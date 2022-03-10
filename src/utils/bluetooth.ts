@@ -1,8 +1,13 @@
 import { BleDevice } from "@capacitor-community/bluetooth-le";
-import { randBoolean, randMac, randProductName } from "@ngneat/falso";
-import { settingsPage } from "../layout/SettingsPage";
+import { randBoolean, randMac, randVehicle } from "@ngneat/falso";
 import { compareStrings, sleep } from "./common";
 import { addJoinedDevice } from "./wifi";
+
+export type BlueToothDevice = {
+  id?: string;
+  name?: string;
+  bms?: boolean;
+};
 
 export enum BluetoothError {
   INTERRUPTED,
@@ -13,39 +18,31 @@ export enum BluetoothError {
   FAILED_TO_CONNECT,
 }
 
-export const NAME_INVALID = "[INVALID]";
-export const MAX_DEVICE_COUNT = 20;
+const NAME_BMS = "[BMS]";
+const NAME_INVALID = "[INVALID]";
+const MAX_DEVICE_COUNT = 15;
 
 export const bluetooth = {
   async scanDevices(running: () => boolean) {
-    await sleep(2000);
+    await sleep(200);
 
-    if (!running()) {
-      throw BluetoothError.INTERRUPTED;
-    }
-
-    if (settingsPage.bluetoothInvalid) {
-      throw BluetoothError.FAILED_TO_INITIALIZE;
-    }
-
-    if (settingsPage.bluetoothDisabled) {
-      throw BluetoothError.BLUETOOTH_DISABLED;
-    }
-
-    if (settingsPage.bluetoothNoScan) {
-      throw BluetoothError.FAILED_TO_SCAN;
-    }
-
-    if (settingsPage.bluetoothNoClient) {
-      throw BluetoothError.NO_DEVICES;
-    }
+    if (!running()) return BluetoothError.INTERRUPTED;
 
     return Array.from({ length: MAX_DEVICE_COUNT })
       .map(() => {
-        const suffix = randBoolean() ? NAME_INVALID : "";
-        const name = `${randProductName()} ${suffix}`;
-        const deviceId = randMac();
-        return { deviceId, name } as BleDevice;
+        const bms = randBoolean();
+        const invalid = randBoolean();
+        const tokens = [
+          randVehicle(),
+          bms && NAME_BMS,
+          invalid && NAME_INVALID,
+        ];
+
+        return {
+          id: randMac(),
+          name: tokens.filter(Boolean).join(" "),
+          bms,
+        } as BlueToothDevice;
       })
       .sort((a, b) => compareStrings(a.name, b.name));
   },

@@ -2,6 +2,8 @@ import { CssBaseline } from "@mui/material";
 import { proxy, useSnapshot } from "valtio";
 import { ThemeModeProvider } from "../components/ThemeModeProvider";
 import { HomePage } from "./HomePage";
+import { ScanDevicesPage } from "./ScanDevicesPage";
+import { SelectDevicesPage } from "./SelectDevicesPage";
 import { SettingsPage, settingsPage } from "./SettingsPage";
 
 export enum AppPage {
@@ -9,9 +11,8 @@ export enum AppPage {
 
   SETTINGS,
 
-  // ADD_DEVICE,
-  // SCAN_DEVICES,
-  // SELECT_DEVICE,
+  SCAN_DEVICES,
+  SELECT_DEVICES,
   // SCAN_NETWORKS,
   // SELECT_NETWORK,
   // ADDED_DEVICE,
@@ -20,11 +21,12 @@ export enum AppPage {
 export const appPageMap = {
   [AppPage.HOME]: <HomePage />,
   [AppPage.SETTINGS]: <SettingsPage />,
-  // [AppPage.ADD_DEVICE_START]: <AddDevicePage />,
+  [AppPage.SCAN_DEVICES]: <ScanDevicesPage />,
+  [AppPage.SELECT_DEVICES]: <SelectDevicesPage />,
 };
 
 export const app = proxy({
-  page: AppPage.SETTINGS,
+  page: AppPage.SCAN_DEVICES,
 });
 
 export const App = () => {

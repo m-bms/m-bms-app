@@ -1,11 +1,11 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { ReactNode } from "react";
 import { BaseDialog, BaseDialogProps } from "../../components/BaseDialog";
-import { BasePage, BasePageProps } from "../../components/BasePage";
 import { LightButton } from "../../components/LightButton";
+import { Page, PageProps } from "../../components/Page";
 
 export type BaseSubPageProps = {
-  header?: BasePageProps["header"];
+  header?: PageProps["header"];
   title: string;
   titleUnderline?: boolean;
   scrollable?: boolean;
@@ -24,7 +24,7 @@ export type BaseSubPageProps = {
 
 export const BaseSubPage = (props: BaseSubPageProps) => {
   return (
-    <BasePage
+    <Page
       header={props.header}
       footer={
         <>
@@ -86,6 +86,6 @@ export const BaseSubPage = (props: BaseSubPageProps) => {
 
         <Box flex={1} />
       </Stack>
-    </BasePage>
+    </Page>
   );
 };

@@ -1,8 +1,8 @@
 export { BluetoothGroup, WifiGroup };
 
-import { Divider, List } from "@mui/material";
-import IconArrowLeft from "~icons/fluent/arrow-left-24-regular?raw";
-import { BasePage } from "../../components/BasePage";
+import { Container, Divider, List } from "@mui/material";
+import IconDismiss from "~icons/fluent/dismiss-24-regular?raw";
+import { Page } from "../../components/Page";
 import { ThemeMode } from "../../components/ThemeModeProvider";
 import { app, AppPage } from "../App";
 import { AppGroup } from "./groups/AppGroup";
@@ -10,6 +10,7 @@ import { BluetoothGroup } from "./groups/BluetoothGroup";
 import { DebugGroup } from "./groups/DebugGroup";
 import { InfoGroup } from "./groups/InfoGroup";
 import { WifiGroup } from "./groups/WifiGroup";
+import { Scrollable } from "/src/components/Scrollable";
 import { proxyWithStorage } from "/src/utils/valtio";
 
 export const settingsPage = proxyWithStorage("settings-page", {
@@ -38,26 +39,31 @@ export const settingsPage = proxyWithStorage("settings-page", {
 
 export const SettingsPage = () => {
   return (
-    <BasePage
+    <Page
+      transition
       header={{
-        title: "Settings",
-        headButtons: {
-          iconRaw: IconArrowLeft,
+        text: "Settings",
+        startButtons: {
+          iconRaw: IconDismiss,
           onClick: () => (app.page = AppPage.HOME),
         },
       }}
     >
-      <List>
-        <InfoGroup />
-        <Divider />
-        <AppGroup />
-        <Divider />
-        <DebugGroup />
-        <Divider />
-        <BluetoothGroup />
-        <Divider />
-        <WifiGroup />
-      </List>
-    </BasePage>
+      <Scrollable>
+        <Container maxWidth="sm" disableGutters>
+          <List>
+            <InfoGroup />
+            <Divider />
+            <AppGroup />
+            <Divider />
+            <DebugGroup />
+            <Divider />
+            <BluetoothGroup />
+            <Divider />
+            <WifiGroup />
+          </List>
+        </Container>
+      </Scrollable>
+    </Page>
   );
 };

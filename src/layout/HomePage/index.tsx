@@ -11,8 +11,8 @@ import { useState } from "react";
 import { useAsyncEffect } from "use-async-effect";
 import IconAdd from "~icons/fluent/add-24-regular?raw";
 import IconSettings from "~icons/fluent/settings-24-regular?raw";
-import { BasePage } from "../../components/BasePage";
 import { LightButton } from "../../components/LightButton";
+import { Page } from "../../components/Page";
 import { app, AppPage } from "../App";
 import { sleep } from "/src/utils/common";
 import { wifi } from "/src/utils/wifi";
@@ -42,15 +42,16 @@ export const HomePage = () => {
   }, []);
 
   return (
-    <BasePage
+    <Page
+      transition
       header={{
-        headButtons: {
+        startButtons: {
           iconRaw: IconSettings,
           onClick: () => (app.page = AppPage.SETTINGS),
         },
-        tailButtons: {
+        endButtons: {
           iconRaw: IconAdd,
-          onClick: () => (app.page = AppPage.ADD_DEVICE_START),
+          onClick: () => (app.page = AppPage.SCAN_DEVICES),
         },
       }}
     >
@@ -79,7 +80,7 @@ export const HomePage = () => {
               <LightButton
                 children="Add device"
                 onClick={() => {
-                  app.page = AppPage.ADD_DEVICE_START;
+                  app.page = AppPage.SCAN_DEVICES;
                 }}
               />
             </Stack>
@@ -94,6 +95,6 @@ export const HomePage = () => {
           ))}
         </List>
       )}
-    </BasePage>
+    </Page>
   );
 };

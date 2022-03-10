@@ -36,11 +36,11 @@ export const SelectNetworkSubPage = () => {
   return (
     <BaseSubPage
       header={{
-        headButtons: {
+        startButtons: {
           iconRaw: IconDismiss,
           onClick: () => (app.page = AppPage.HOME),
         },
-        tailButtons: WifiDebugButton,
+        endButtons: WifiDebugButton,
       }}
       title="Select network"
       titleUnderline

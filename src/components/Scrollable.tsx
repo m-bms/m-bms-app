@@ -1,11 +1,21 @@
 import { styled } from "@mui/material";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
-import { ReactNode } from "react";
+import "overlayscrollbars/css/OverlayScrollbars.css";
+import { ComponentType } from "react";
 
-const StyledScrollable = styled(OverlayScrollbarsComponent)(({ theme }) => ({
+export const Scrollable: ComponentType = styled((props) => (
+  <OverlayScrollbarsComponent
+    {...props}
+    options={{
+      scrollbars: {
+        autoHide: "scroll",
+      },
+    }}
+  />
+))(({ theme }) => ({
   height: "100%",
   ".os-scrollbar": {
-    width: "4px",
+    width: theme.spacing(0.5),
     padding: 0,
   },
   ".os-scrollbar-handle": {
@@ -13,16 +23,3 @@ const StyledScrollable = styled(OverlayScrollbarsComponent)(({ theme }) => ({
     background: `${theme.palette.text.disabled} !important`,
   },
 }));
-
-export const Scrollable = (props: { children?: ReactNode }) => {
-  return (
-    <StyledScrollable
-      options={{
-        scrollbars: {
-          autoHide: "scroll",
-        },
-      }}
-      children={props.children}
-    />
-  );
-};

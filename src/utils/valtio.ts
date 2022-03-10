@@ -4,7 +4,7 @@ import { subscribeKey } from "valtio/utils";
 export const proxyWithStorage = <T extends Record<string, unknown>>(
   name: string,
   data: T,
-  ...keys: (keyof T)[]
+  keys: (keyof T)[] = []
 ) => {
   const local = localStorage.getItem(name);
   const state = proxy<T>({ ...data, ...(local && JSON.parse(local)) });
