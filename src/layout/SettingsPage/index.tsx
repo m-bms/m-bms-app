@@ -1,39 +1,26 @@
-export { BluetoothGroup, WifiGroup };
-
 import { Container, Divider, List } from "@mui/material";
 import IconDismiss from "~icons/fluent/dismiss-24-regular?raw";
-import { Page } from "../../components/Page";
-import { ThemeMode } from "../../components/ThemeModeProvider";
 import { app, AppPage } from "../App";
-import { AppGroup } from "./groups/AppGroup";
-import { BluetoothGroup } from "./groups/BluetoothGroup";
-import { DebugGroup } from "./groups/DebugGroup";
-import { InfoGroup } from "./groups/InfoGroup";
-import { WifiGroup } from "./groups/WifiGroup";
+import { AppGroup } from "./setting-groups/AppGroup";
+import { DebugGroup } from "./setting-groups/DebugGroup";
+import { InfoGroup } from "./setting-groups/InfoGroup";
+import { Page } from "/src/components/Page";
 import { Scrollable } from "/src/components/Scrollable";
+import { ThemeMode } from "/src/components/ThemeModeProvider";
+import { BluetoothError } from "/src/utils/bluetooth";
 import { proxyWithStorage } from "/src/utils/valtio";
+import { WifiError } from "/src/utils/wifi";
 
-export const settingsPage = proxyWithStorage("settings-page", {
+export const defaultSettings = {
   themeMode: ThemeMode.DARK,
-  bluetoothInvalid: false,
-  bluetoothDisabled: false,
-  bluetoothNoScan: false,
-  bluetoothNoClient: false,
-  wifiInvalid: false,
-  wifiDisabled: false,
-  wifiNoScan: false,
-  wifiNoNetwork: false,
+  bluetoothError: BluetoothError.NO_ERRORS,
+  wifiError: WifiError.NO_ERRORS,
+};
 
+export const settings = proxyWithStorage("settings", {
+  ...defaultSettings,
   reset() {
-    settingsPage.themeMode = ThemeMode.DARK;
-    settingsPage.bluetoothInvalid = false;
-    settingsPage.bluetoothDisabled = false;
-    settingsPage.bluetoothNoScan = false;
-    settingsPage.bluetoothNoClient = false;
-    settingsPage.wifiInvalid = false;
-    settingsPage.wifiDisabled = false;
-    settingsPage.wifiNoScan = false;
-    settingsPage.wifiNoNetwork = false;
+    Object.assign(settings, defaultSettings);
   },
 });
 
@@ -57,10 +44,6 @@ export const SettingsPage = () => {
             <AppGroup />
             <Divider />
             <DebugGroup />
-            <Divider />
-            <BluetoothGroup />
-            <Divider />
-            <WifiGroup />
           </List>
         </Container>
       </Scrollable>

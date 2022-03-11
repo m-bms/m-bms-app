@@ -60,7 +60,7 @@ export const ScanDeviceSubPage = () => {
       iconRaw={IconBluetooth}
       progress
     />
-  ) : error === BluetoothError.FAILED_TO_INITIALIZE ? (
+  ) : error === BluetoothError.HARDWARE_NOT_FOUND ? (
     <BaseBannerSubPage
       title="Bluetooth failed"
       text="Unable to detect Bluetooth hardware.

@@ -9,12 +9,14 @@ import {
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useSnapshot } from "valtio";
+import IconBattery10 from "~icons/fluent/battery-10-24-regular?raw";
 import IconBluetooth from "~icons/fluent/bluetooth-24-regular?raw";
-import IconBug from "~icons/fluent/bug-24-regular?raw";
 import IconDismiss from "~icons/fluent/dismiss-24-regular?raw";
 import IconFilter from "~icons/fluent/filter-24-regular?raw";
 import { app, AppPage } from "../App";
+import { FakeBluetoothDebugButton } from "../DebugButton";
 import { scanDevices } from "../ScanDevicesPage";
+import { settings } from "../SettingsPage";
 import { SelectMenu } from "/src/components/SelectMenu";
 import { StepPage } from "/src/components/StepPage";
 import { UnpluginIcon } from "/src/components/UnpluginIcon";
@@ -36,8 +38,9 @@ export const selectDevices = proxyWithStorage(
 );
 
 export const SelectDevicesPage = () => {
-  const { filter, devices } = useSnapshot(selectDevices);
+  const { bluetoothError: fakeBluetoothState } = useSnapshot(settings);
 
+  const { filter, devices } = useSnapshot(selectDevices);
   const [bmses, setBmses] = useState<
     (BlueToothDevice & { selected?: boolean })[]
   >([]);
@@ -82,24 +85,17 @@ export const SelectDevicesPage = () => {
           onClick: () => (app.page = AppPage.HOME),
         },
         endButtons: [
-          {
-            iconRaw: IconBug,
-          },
+          FakeBluetoothDebugButton(fakeBluetoothState),
           {
             iconRaw: IconFilter,
             component: (key, render) => (
               <SelectMenu
                 key={key}
+                rightOrigin
                 value={filter}
                 options={[
-                  {
-                    value: DeviceFilter.BMS,
-                    text: "Show only BMS",
-                  },
-                  {
-                    value: DeviceFilter.ALL,
-                    text: "Show all devices",
-                  },
+                  { value: DeviceFilter.BMS, text: "Show only BMS" },
+                  { value: DeviceFilter.ALL, text: "Show all devices" },
                 ]}
                 onChange={(value) => (selectDevices.filter = value)}
                 trigger={(setAnchor) =>
@@ -140,7 +136,9 @@ export const SelectDevicesPage = () => {
             <ListItemButton sx={{ overflow: "hidden" }}>
               <ListItemAvatar>
                 <Avatar>
-                  <UnpluginIcon raw={IconBluetooth} />
+                  <UnpluginIcon
+                    raw={device.bms ? IconBattery10 : IconBluetooth}
+                  />
                 </Avatar>
               </ListItemAvatar>
 

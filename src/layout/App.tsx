@@ -4,7 +4,7 @@ import { ThemeModeProvider } from "../components/ThemeModeProvider";
 import { HomePage } from "./HomePage";
 import { ScanDevicesPage } from "./ScanDevicesPage";
 import { SelectDevicesPage } from "./SelectDevicesPage";
-import { SettingsPage, settingsPage } from "./SettingsPage";
+import { settings, SettingsPage } from "./SettingsPage";
 
 export enum AppPage {
   HOME,
@@ -31,7 +31,7 @@ export const app = proxy({
 
 export const App = () => {
   const { page } = useSnapshot(app);
-  const { themeMode } = useSnapshot(settingsPage);
+  const { themeMode } = useSnapshot(settings);
 
   // TODO: add status bar
   // useEffect(() => {

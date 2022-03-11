@@ -20,6 +20,7 @@ export const ProgressPageContent = (props: {
           />
         )}
       </Box>
+
       <Stack flex={6} py={1} justifyContent="center">
         {props.iconRaw && (
           <UnpluginIcon
@@ -33,6 +34,7 @@ export const ProgressPageContent = (props: {
           />
         )}
       </Stack>
+
       <Box flex={1} py={1}>
         {props.progress && (
           <LinearProgress

@@ -1,6 +1,5 @@
 import { BleDevice } from "@capacitor-community/bluetooth-le";
 import { randFullName, randMac } from "@ngneat/falso";
-import { settingsPage } from "../layout/SettingsPage";
 import { compareStrings, sleep } from "./common";
 
 export type WifiNetwork = {
@@ -10,12 +9,11 @@ export type WifiNetwork = {
 };
 
 export enum WifiError {
-  INTERRUPTED,
-  FAILED_TO_INITIALIZE,
-  HARDWARE_DISABLED,
-  FAILED_TO_SCAN_NETWORKS,
-  NO_NETWORKS,
-  FAILED_TO_CONNECT,
+  NO_ERRORS = "no-errors",
+  INTERRUPTED = "interrupted",
+  NO_HARDWARE = "no-hardware",
+  SCAN_FAILED = "scan-failed",
+  NO_NETWORKS = "no-networks",
 }
 
 export const MAX_NETWORK_COUNT = 20;
@@ -28,21 +26,21 @@ export const wifi = {
       throw WifiError.INTERRUPTED;
     }
 
-    if (settingsPage.wifiInvalid) {
-      throw WifiError.FAILED_TO_INITIALIZE;
-    }
+    // if (settings.wifiInvalid) {
+    //   throw WifiError.FAILED_TO_INITIALIZE;
+    // }
 
-    if (settingsPage.wifiDisabled) {
-      throw WifiError.HARDWARE_DISABLED;
-    }
+    // if (settings.wifiDisabled) {
+    //   throw WifiError.HARDWARE_DISABLED;
+    // }
 
-    if (settingsPage.wifiNoScan) {
-      throw WifiError.FAILED_TO_SCAN_NETWORKS;
-    }
+    // if (settings.wifiNoScan) {
+    //   throw WifiError.FAILED_TO_SCAN_NETWORKS;
+    // }
 
-    if (settingsPage.wifiNoNetwork) {
-      throw WifiError.NO_NETWORKS;
-    }
+    // if (settings.wifiNoNetwork) {
+    //   throw WifiError.NO_NETWORKS;
+    // }
 
     return Array.from({ length: MAX_NETWORK_COUNT })
       .map((_, index) => {
