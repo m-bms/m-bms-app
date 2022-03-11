@@ -14,7 +14,7 @@ import IconBluetooth from "~icons/fluent/bluetooth-24-regular?raw";
 import IconDismiss from "~icons/fluent/dismiss-24-regular?raw";
 import IconFilter from "~icons/fluent/filter-24-regular?raw";
 import { app, AppPage } from "../App";
-import { FakeBluetoothDebugButton } from "../DebugButton";
+import { BluetoothDebugButton } from "../DebugButton";
 import { scanDevices } from "../ScanDevicesPage";
 import { settings } from "../SettingsPage";
 import { SelectMenu } from "/src/components/SelectMenu";
@@ -38,27 +38,25 @@ export const selectDevices = proxyWithStorage(
 );
 
 export const SelectDevicesPage = () => {
-  const { bluetoothError: fakeBluetoothState } = useSnapshot(settings);
-
+  const { bluetoothError } = useSnapshot(settings);
   const { filter, devices } = useSnapshot(selectDevices);
-  const [bmses, setBmses] = useState<
+
+  const [filtereds, setFiltereds] = useState<
     (BlueToothDevice & { selected?: boolean })[]
   >([]);
 
   const selecteds = useMemo(
-    () => bmses.filter((device) => device.selected),
-    [bmses]
+    () => filtereds.filter((device) => device.selected),
+    [filtereds]
   );
 
-  useEffect(
-    () =>
-      setBmses(
-        devices
-          .filter((device) => filter === DeviceFilter.ALL || device.bms)
-          .map((device) => ({ ...device }))
-      ),
-    [filter]
-  );
+  useEffect(() => {
+    setFiltereds(
+      devices
+        .filter((device) => filter === DeviceFilter.ALL || device.bms)
+        .map((device) => ({ ...device }))
+    );
+  }, [filter]);
 
   return (
     <StepPage
@@ -74,8 +72,8 @@ export const SelectDevicesPage = () => {
           }}
           onClick={() => {
             const toggled = !selecteds.length;
-            bmses.forEach((device) => (device.selected = toggled));
-            setBmses([...bmses]);
+            filtereds.forEach((device) => (device.selected = toggled));
+            setFiltereds([...filtereds]);
           }}
         />
       }
@@ -85,7 +83,7 @@ export const SelectDevicesPage = () => {
           onClick: () => (app.page = AppPage.HOME),
         },
         endButtons: [
-          FakeBluetoothDebugButton(fakeBluetoothState),
+          BluetoothDebugButton(bluetoothError),
           {
             iconRaw: IconFilter,
             component: (key, render) => (
@@ -121,7 +119,7 @@ export const SelectDevicesPage = () => {
       }}
     >
       <List>
-        {bmses.map((device, index) => (
+        {filtereds.map((device, index) => (
           <ListItem
             key={index}
             selected={device.selected}
@@ -130,7 +128,7 @@ export const SelectDevicesPage = () => {
             divider
             onClick={() => {
               device.selected = !device.selected;
-              setBmses([...bmses]);
+              setFiltereds([...filtereds]);
             }}
           >
             <ListItemButton sx={{ overflow: "hidden" }}>

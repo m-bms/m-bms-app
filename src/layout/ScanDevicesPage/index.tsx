@@ -6,9 +6,10 @@ import IconBluetoothDisabled from "~icons/fluent/bluetooth-disabled-20-regular?r
 import IconInfo from "~icons/fluent/info-20-regular?raw";
 import IconWarning from "~icons/fluent/warning-20-regular?raw";
 import { app, AppPage } from "../App";
-import { FakeBluetoothDebugButton } from "../DebugButton";
+import { BluetoothDebugButton } from "../DebugButton";
 import { selectDevices } from "../SelectDevicesPage";
 import { settings } from "../SettingsPage";
+import { PageFooterButton, PageProps } from "/src/components/Page";
 import { ProgressPageContent } from "/src/components/ProgressPageContent";
 import { StepPage } from "/src/components/StepPage";
 import { bluetooth, BluetoothError } from "/src/utils/bluetooth";
@@ -18,7 +19,7 @@ export const scanDevices = proxy({
 });
 
 export const ScanDevicesPage = () => {
-  const { bluetoothError: fakeBluetoothState } = useSnapshot(settings);
+  const { bluetoothError } = useSnapshot(settings);
   const { transition } = useSnapshot(scanDevices);
   const [scanning, setScanning] = useState(true);
   const [error, setError] = useState<unknown>();
@@ -40,59 +41,57 @@ export const ScanDevicesPage = () => {
     [scanning]
   );
 
-  return (
+  const cancelButton: PageFooterButton = {
+    text: "Cancel",
+    onClick: () => (app.page = AppPage.HOME),
+  };
+
+  const errorPageProps: PageProps = {
+    header: {
+      endButtons: BluetoothDebugButton(bluetoothError),
+    },
+    footer: {
+      startButton: cancelButton,
+      endButton: {
+        text: "Retry",
+        onClick: () => setScanning(true),
+      },
+    },
+  };
+
+  return scanning ? (
     <StepPage
       transition={transition}
-      headerText={
-        scanning
-          ? "Scan devices"
-          : error === BluetoothError.NO_HARDWARE
-          ? "No Bluetooth"
-          : error === BluetoothError.NO_DEVICES
-          ? "No devices"
-          : "Scan failed"
-      }
-      header={{
-        endButtons: scanning
-          ? undefined
-          : FakeBluetoothDebugButton(fakeBluetoothState),
-      }}
-      footer={{
-        startButton: {
-          text: "Cancel",
-          onClick: () => (app.page = AppPage.HOME),
-        },
-        endButton: scanning
-          ? undefined
-          : {
-              text: "Retry",
-              onClick: () => setScanning(true),
-            },
-      }}
+      headerText="Scan devices"
+      footer={{ startButton: cancelButton }}
     >
-      {scanning ? (
-        <ProgressPageContent
-          text="The app will connect to BMS devices via Bluetooth,
+      <ProgressPageContent
+        text="The app will connect to BMS devices via Bluetooth,
           then instructs them to join the desired WiFi network."
-          iconRaw={IconBluetooth}
-          progress
-        />
-      ) : error === BluetoothError.NO_HARDWARE ? (
-        <ProgressPageContent
-          text="Hardware not found. Make sure Bluetooth is enabled."
-          iconRaw={IconBluetoothDisabled}
-        />
-      ) : error === BluetoothError.NO_DEVICES ? (
-        <ProgressPageContent
-          text="No availble devices found via Bluetooth."
-          iconRaw={IconInfo}
-        />
-      ) : (
-        <ProgressPageContent
-          text="Unexpected error while scanning devices via Bluetooth."
-          iconRaw={IconWarning}
-        />
-      )}
+        iconRaw={IconBluetooth}
+        progress
+      />
+    </StepPage>
+  ) : error === BluetoothError.NO_HARDWARE ? (
+    <StepPage headerText="No Bluetooth" {...errorPageProps}>
+      <ProgressPageContent
+        text="Hardware not found. Make sure Bluetooth is enabled."
+        iconRaw={IconBluetoothDisabled}
+      />
+    </StepPage>
+  ) : error === BluetoothError.NO_DEVICES ? (
+    <StepPage headerText="No devices" {...errorPageProps}>
+      <ProgressPageContent
+        text="No availble devices found via Bluetooth."
+        iconRaw={IconInfo}
+      />
+    </StepPage>
+  ) : (
+    <StepPage headerText="Scan failed" {...errorPageProps}>
+      <ProgressPageContent
+        text="Unexpected error while scanning devices via Bluetooth."
+        iconRaw={IconWarning}
+      />
     </StepPage>
   );
 };

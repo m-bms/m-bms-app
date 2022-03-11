@@ -4,7 +4,7 @@ import { SelectMenu } from "../components/SelectMenu";
 import { BluetoothError } from "../utils/bluetooth";
 import { settings } from "./SettingsPage";
 
-export const FakeBluetoothDebugButton = (
+export const BluetoothDebugButton = (
   error: BluetoothError
 ): PageHeaderButton => ({
   iconRaw: IconBug,

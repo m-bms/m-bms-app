@@ -33,7 +33,3 @@ export const proxyWithStorage = <T extends Record<string, unknown>>(
 
   return state;
 };
-
-declare module "valtio" {
-  function useSnapshot<T extends object>(p: T): T;
-}
