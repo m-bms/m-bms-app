@@ -19,10 +19,9 @@ export const connectDevices = proxy({
 
 export const ConnectDevicesPage = () => {
   const { selecteds } = useSnapshot(selectDevices);
+  const { connecteds } = useSnapshot(connectDevices);
   const [results, setResults] = useState(selecteds.map(() => Status.ACTIVE));
   const [dones, setDones] = useState(0);
-
-  const { connecteds } = connectDevices;
 
   useAsyncEffect((unmounted) => {
     selecteds.forEach(async (device, index) => {
@@ -38,6 +37,7 @@ export const ConnectDevicesPage = () => {
       setResults((results) => ((results[index] = result), [...results]));
       setDones((value) => ++value);
 
+      const { connecteds } = connectDevices;
       if (result === Status.SUCCESSFUL) connecteds.push(device);
       if (connecteds.length === selecteds.length) continueNext();
     });

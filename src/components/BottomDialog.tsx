@@ -8,12 +8,14 @@ export const bottomDialog = proxy({
   transition: 0,
 });
 
-export const setBottomDialog = (open: boolean) => {
+export const setBottomDialog = (open: boolean, async = false) => {
   bottomDialog.open = open;
 
   if (open) {
     bottomDialog.closed = false;
     bottomDialog.transition = 0;
+  } else if (async) {
+    bottomDialog.closed = true;
   } else {
     const transition = setTimeout(() => {
       if (bottomDialog.transition !== transition) return;

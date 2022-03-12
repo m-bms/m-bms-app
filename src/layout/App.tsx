@@ -3,13 +3,12 @@ import { proxy, useSnapshot } from "valtio";
 import { ThemeModeProvider } from "../components/ThemeModeProvider";
 import { ConnectDevicesPage } from "./ConnectDevicesPage";
 import { HomePage } from "./HomePage";
+import { JoinDevicesPage } from "./JoinDevicesPage";
 import { ScanDevicesPage } from "./ScanDevicesPage";
 import { ScanNetworksPage } from "./ScanNetworksPage";
 import { SelectDevicesPage } from "./SelectDevicesPage";
 import { SelectNetworkPage } from "./SelectNetworkPage";
 import { settings, SettingsPage } from "./SettingsPage";
-
-// Keyboard.addListener("keyboardWillShow", () => alert("show"));
 
 export enum AppPage {
   HOME,
@@ -19,7 +18,7 @@ export enum AppPage {
   CONNECT_DEVICES,
   SCAN_NETWORKS,
   SELECT_NETWORK,
-  // ADDED_DEVICE,
+  JOIN_DEVICES,
 }
 
 export const appPageMap = {
@@ -30,10 +29,11 @@ export const appPageMap = {
   [AppPage.CONNECT_DEVICES]: <ConnectDevicesPage />,
   [AppPage.SCAN_NETWORKS]: <ScanNetworksPage />,
   [AppPage.SELECT_NETWORK]: <SelectNetworkPage />,
+  [AppPage.JOIN_DEVICES]: <JoinDevicesPage />,
 };
 
 export const app = proxy({
-  page: AppPage.SCAN_DEVICES,
+  page: AppPage.HOME,
 });
 
 export const App = () => {

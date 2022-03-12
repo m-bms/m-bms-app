@@ -36,6 +36,7 @@ export const ScanNetworksPage = () => {
         selectNetwork.selected = undefined;
         selectNetwork.passwordDialog = false;
         selectNetwork.passwordShow = false;
+        selectNetwork.password = "";
 
         app.page = AppPage.SELECT_NETWORK;
       } catch (error) {

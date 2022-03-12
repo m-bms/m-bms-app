@@ -22,22 +22,24 @@ import IconWifi1 from "~icons/fluent/wifi-1-24-regular?raw";
 import { BottomDialog, setBottomDialog } from "../../components/BottomDialog";
 import { app, AppPage } from "../App";
 import { WifiDebugButton } from "../DebugButton";
+import { joinDevices } from "../JoinDevicesPage";
 import { scanNetworks } from "../ScanNetworksPage";
 import { settings } from "../SettingsPage";
 import { StepPage } from "/src/components/StepPage";
 import { UnpluginIcon } from "/src/components/UnpluginIcon";
-import { WifiNetwork } from "/src/utils/wifi";
+import { WifiNetwork, WIFI_NETWORK_PASSWORD } from "/src/utils/wifi";
 
 export const selectNetwork = proxy({
   networks: [] as WifiNetwork[],
   selected: undefined as WifiNetwork | undefined,
   passwordDialog: false,
   passwordShow: false,
+  password: "",
 });
 
 export const SelectNetworkPage = () => {
   const { wifiStatus } = useSnapshot(settings);
-  const { networks, selected, passwordDialog, passwordShow } =
+  const { networks, selected, passwordDialog, passwordShow, password } =
     useSnapshot(selectNetwork);
 
   useEffect(() => {
@@ -113,10 +115,14 @@ export const SelectNetworkPage = () => {
           <DialogContent>
             <TextField
               type={passwordShow ? "text" : "password"}
-              placeholder="Password"
+              value={password}
+              placeholder={`Password [${WIFI_NETWORK_PASSWORD}]`}
               autoFocus
               size="small"
               fullWidth
+              onChange={(event) => {
+                selectNetwork.password = event.target.value;
+              }}
               InputProps={{
                 endAdornment: (
                   <IconButton
@@ -140,7 +146,16 @@ export const SelectNetworkPage = () => {
 
               <Box flex={1} />
 
-              <Button variant="contained" children="Join Devices" />
+              <Button
+                variant="contained"
+                disabled={password.length < 6}
+                onClick={() => {
+                  joinDevices.joineds = [];
+                  app.page = AppPage.JOIN_DEVICES;
+                  setBottomDialog(false, true);
+                }}
+                children="Join Devices"
+              />
             </Box>
           </DialogContent>
         </BottomDialog>

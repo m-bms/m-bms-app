@@ -1,11 +1,12 @@
 import { randBoolean, randMac, randNumber, randVehicle } from "@ngneat/falso";
 import { compareStrings, sleep } from "../common";
 import { Status } from "../status";
+import { WIFI_NETWORK_PASSWORD } from "../wifi";
 import { BlueToothDevice } from "./type";
 import { settings } from "/src/layout/SettingsPage";
 
 const NAME_BMS = "[BMS]";
-const NAME_INVALID = "[INVALID]";
+const NAME_NO_JOIN = "[NO_JOIN]";
 const MAX_DEVICE_COUNT = 10;
 
 export const fakeBluetooth = {
@@ -19,12 +20,8 @@ export const fakeBluetooth = {
     return Array.from({ length: MAX_DEVICE_COUNT })
       .map(() => {
         const bms = randBoolean();
-        const invalid = randBoolean();
-        const tokens = [
-          randVehicle(),
-          bms && NAME_BMS,
-          invalid && NAME_INVALID,
-        ];
+        const noJoin = randBoolean();
+        const tokens = [randVehicle(), bms && NAME_BMS, noJoin && NAME_NO_JOIN];
 
         return {
           id: randMac(),
@@ -35,10 +32,23 @@ export const fakeBluetooth = {
       .sort((a, b) => compareStrings(a.name, b.name));
   },
   async connectDevice(unmounted: () => boolean, device: BlueToothDevice) {
-    await sleep(randNumber({ min: 500, max: 3000 }));
+    await sleep(randNumber({ min: 500, max: 2000 }));
     if (unmounted()) throw Status.INTERRUPTED;
 
-    if (!device.bms || device.name.indexOf(NAME_INVALID) >= 0)
+    if (!device.bms) throw Status.FAILED;
+  },
+  async joinDevice(
+    unmounted: () => boolean,
+    device: BlueToothDevice,
+    password?: string
+  ) {
+    await sleep(randNumber({ min: 500, max: 2000 }));
+    if (unmounted()) throw Status.INTERRUPTED;
+
+    if (
+      device.name.indexOf(NAME_NO_JOIN) >= 0 ||
+      password !== WIFI_NETWORK_PASSWORD
+    )
       throw Status.FAILED;
   },
 };
