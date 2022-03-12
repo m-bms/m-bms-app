@@ -8,33 +8,20 @@ import { settings } from "/src/layout/SettingsPage";
 const MAX_DEVICE_COUNT = 10;
 
 export const fakeWifi = proxy({
-  networks: [] as WifiNetwork[],
-  scanning: Status.IDLE,
-  clean() {
-    fakeWifi.networks = [];
-    fakeWifi.scanning = Status.IDLE;
-  },
   async scanNetworks(unmounted: () => boolean) {
-    fakeWifi.scanning = Status.ACTIVE;
-
     await sleep(200);
-    if (unmounted()) {
-      fakeWifi.clean();
-      return;
-    }
+    if (unmounted()) throw Status.INTERRUPTED;
 
-    fakeWifi.scanning = settings.wifiStatus;
-    if (fakeWifi.scanning !== Status.SUCCESSFUL) return;
+    if (settings.wifiStatus !== Status.SUCCESSFUL) throw settings.wifiStatus;
 
-    fakeWifi.networks = Array.from({ length: MAX_DEVICE_COUNT })
-      .map(() =>
-        proxy<WifiNetwork>({
-          ssid: randFullName(),
-          mac: randMac(),
-        })
-      )
+    const networks: WifiNetwork[] = Array.from({ length: MAX_DEVICE_COUNT })
+      .map(() => ({
+        ssid: randFullName(),
+        mac: randMac(),
+      }))
       .sort((a, b) => compareStrings(a.ssid, b.ssid));
 
-    fakeWifi.networks[0].current = true;
+    networks[0].current = true;
+    return networks;
   },
 });

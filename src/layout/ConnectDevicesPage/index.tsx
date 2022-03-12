@@ -1,48 +1,47 @@
-import { useEffect, useMemo } from "react";
-import { useSnapshot } from "valtio";
+import { useState } from "react";
+import { proxy, useSnapshot } from "valtio";
 import { app, AppPage } from "../App";
 import { scanNetworks } from "../ScanNetworksPage";
+import { selectDevices } from "../SelectDevicesPage";
 import { PageProps } from "/src/components/Page";
 import { StepPage } from "/src/components/StepPage";
 import {
   ProgressList,
   ProgressListProps,
 } from "/src/components/StepPageContent";
-import { bluetooth } from "/src/utils/bluetooth";
+import { bluetooth, BlueToothDevice } from "/src/utils/bluetooth";
 import { useAsyncEffect } from "/src/utils/react";
 import { Status } from "/src/utils/status";
 
+export const connectDevices = proxy({
+  connecteds: [] as BlueToothDevice[],
+});
+
 export const ConnectDevicesPage = () => {
-  const { devices } = useSnapshot(bluetooth);
+  const { selecteds } = useSnapshot(selectDevices);
+  const [results, setResults] = useState(selecteds.map(() => Status.ACTIVE));
+  const [dones, setDones] = useState(0);
 
-  const selecteds = useMemo(
-    () => devices.filter((device) => device.selected),
-    [devices]
-  );
+  const { connecteds } = connectDevices;
 
-  const successfuls = useMemo(
-    () => selecteds.filter((device) => device.connecting === Status.SUCCESSFUL),
-    [selecteds]
-  );
+  useAsyncEffect((unmounted) => {
+    selecteds.forEach(async (device, index) => {
+      let result = Status.SUCCESSFUL;
 
-  const actives = useMemo(
-    () => selecteds.filter((device) => device.connecting === Status.ACTIVE),
-    [selecteds]
-  );
+      try {
+        await bluetooth.connectDevice(unmounted, device);
+      } catch {
+        result = Status.FAILED;
+      }
+      if (unmounted()) return;
 
-  useAsyncEffect(
-    (unmounted) => selecteds.forEach((device) => device.connect(unmounted)),
-    []
-  );
+      setResults((results) => ((results[index] = result), [...results]));
+      setDones((value) => ++value);
 
-  useEffect(() => {
-    if (
-      selecteds.length &&
-      !actives.length &&
-      successfuls.length === selecteds.length
-    )
-      continueNext();
-  }, [selecteds, actives, successfuls]);
+      if (result === Status.SUCCESSFUL) connecteds.push(device);
+      if (connecteds.length === selecteds.length) continueNext();
+    });
+  }, []);
 
   const continueNext = () => {
     scanNetworks.transition = true;
@@ -52,24 +51,21 @@ export const ConnectDevicesPage = () => {
   const listProps: ProgressListProps = {
     length: selecteds.length,
     getText: (index) => selecteds[index].name,
-    getStatus: (index) => selecteds[index].connecting,
+    getStatus: (index) => results[index],
   };
 
   const pageFooter: PageProps["footer"] = {
     startButton: {
       text: "Cancel",
-      onClick() {
-        bluetooth.clean();
-        app.page = AppPage.HOME;
-      },
+      onClick: () => (app.page = AppPage.HOME),
     },
   };
 
-  return actives.length ? (
+  return dones < selecteds.length ? (
     <StepPage headerText="Connecting devices" footer={pageFooter}>
       <ProgressList {...listProps} />
     </StepPage>
-  ) : successfuls.length ? (
+  ) : connecteds.length ? (
     <StepPage
       headerText="Uncompleted"
       footer={{

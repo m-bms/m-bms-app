@@ -1,5 +1,4 @@
 import { randBoolean, randMac, randNumber, randVehicle } from "@ngneat/falso";
-import { proxy } from "valtio";
 import { compareStrings, sleep } from "../common";
 import { Status } from "../status";
 import { BlueToothDevice } from "./type";
@@ -9,31 +8,15 @@ const NAME_BMS = "[BMS]";
 const NAME_INVALID = "[INVALID]";
 const MAX_DEVICE_COUNT = 10;
 
-export const fakeBluetooth = proxy({
-  devices: [] as BlueToothDevice[],
-  scanning: Status.IDLE,
-  connecting: Status.IDLE,
-  setSelectedAll(value: boolean) {
-    fakeBluetooth.devices.forEach((device) => (device.selected = value));
-  },
-  clean() {
-    fakeBluetooth.devices = [];
-    fakeBluetooth.scanning = Status.IDLE;
-    fakeBluetooth.connecting = Status.IDLE;
-  },
+export const fakeBluetooth = {
   async scanDevices(unmounted: () => boolean) {
-    fakeBluetooth.scanning = Status.ACTIVE;
-
     await sleep(2000);
-    if (unmounted()) {
-      fakeBluetooth.clean();
-      return;
-    }
+    if (unmounted()) throw Status.INTERRUPTED;
 
-    fakeBluetooth.scanning = settings.bluetoothStatus;
-    if (fakeBluetooth.scanning !== Status.SUCCESSFUL) return;
+    if (settings.bluetoothStatus !== Status.SUCCESSFUL)
+      throw settings.bluetoothStatus;
 
-    fakeBluetooth.devices = Array.from({ length: MAX_DEVICE_COUNT })
+    return Array.from({ length: MAX_DEVICE_COUNT })
       .map(() => {
         const bms = randBoolean();
         const invalid = randBoolean();
@@ -43,28 +26,19 @@ export const fakeBluetooth = proxy({
           invalid && NAME_INVALID,
         ];
 
-        const device: BlueToothDevice = proxy({
+        return {
           id: randMac(),
           name: tokens.filter(Boolean).join(" "),
           bms,
-          connecting: Status.IDLE,
-          joining: Status.IDLE,
-          toggleSelected: () => (device.selected = !device.selected),
-          async connect(unmounted) {
-            device.connecting = Status.ACTIVE;
-
-            await sleep(randNumber({ min: 500, max: 3000 }));
-            if (unmounted()) return;
-
-            device.connecting =
-              device.bms && device.name.indexOf(NAME_INVALID) < 0
-                ? Status.SUCCESSFUL
-                : Status.FAILED;
-          },
-        });
-
-        return device;
+        } as BlueToothDevice;
       })
       .sort((a, b) => compareStrings(a.name, b.name));
   },
-});
+  async connectDevice(unmounted: () => boolean, device: BlueToothDevice) {
+    await sleep(randNumber({ min: 500, max: 3000 }));
+    if (unmounted()) throw Status.INTERRUPTED;
+
+    if (!device.bms || device.name.indexOf(NAME_INVALID) >= 0)
+      throw Status.FAILED;
+  },
+};

@@ -7,45 +7,45 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import { useMemo } from "react";
-import { useSnapshot } from "valtio";
+import { useMemo, useState } from "react";
+import { proxy, useSnapshot } from "valtio";
 import IconBattery10 from "~icons/fluent/battery-10-24-regular?raw";
 import IconBluetooth from "~icons/fluent/bluetooth-24-regular?raw";
 import IconDismiss from "~icons/fluent/dismiss-24-regular?raw";
 import IconFilter from "~icons/fluent/filter-24-regular?raw";
 import { app, AppPage } from "../App";
+import { connectDevices } from "../ConnectDevicesPage";
 import { BluetoothDebugButton } from "../DebugButton";
 import { scanDevices } from "../ScanDevicesPage";
 import { settings } from "../SettingsPage";
 import { SelectMenu } from "/src/components/SelectMenu";
 import { StepPage } from "/src/components/StepPage";
 import { UnpluginIcon } from "/src/components/UnpluginIcon";
-import { bluetooth } from "/src/utils/bluetooth";
-import { proxyWithStorage } from "/src/utils/valtio";
+import { BlueToothDevice } from "/src/utils/bluetooth";
 
 enum DeviceFilter {
   BMS = "bms",
   ALL = "all",
 }
 
-export const selectDevices = proxyWithStorage("select-devices", {
-  filter: DeviceFilter.BMS,
+export const selectDevices = proxy({
+  devices: [] as BlueToothDevice[],
+  selecteds: [] as BlueToothDevice[],
 });
 
 export const SelectDevicesPage = () => {
   const { bluetoothStatus } = useSnapshot(settings);
-  const { filter } = useSnapshot(selectDevices);
-  const { devices } = useSnapshot(bluetooth);
+  const { devices, selecteds } = useSnapshot(selectDevices);
+  const [filter, setFilter] = useState(DeviceFilter.BMS);
 
   const filtereds = useMemo(
     () => devices.filter((device) => filter === DeviceFilter.ALL || device.bms),
     [filter, devices]
   );
 
-  const selecteds = useMemo(
-    () => filtereds.filter((device) => device.selected),
-    [filtereds]
-  );
+  const setSelectedAll = (value: boolean) => {
+    selectDevices.selecteds = value ? [...devices] : [];
+  };
 
   return (
     <StepPage
@@ -59,16 +59,13 @@ export const SelectDevicesPage = () => {
             right: 16,
             bottom: -6,
           }}
-          onClick={() => bluetooth.setSelectedAll(!selecteds.length)}
+          onClick={() => setSelectedAll(!selecteds.length)}
         />
       }
       header={{
         startButtons: {
           iconRaw: IconDismiss,
-          onClick() {
-            bluetooth.clean();
-            app.page = AppPage.HOME;
-          },
+          onClick: () => (app.page = AppPage.HOME),
         },
         endButtons: [
           BluetoothDebugButton(bluetoothStatus),
@@ -83,8 +80,8 @@ export const SelectDevicesPage = () => {
                   { value: DeviceFilter.ALL, text: "Show all devices" },
                 ]}
                 onChange={(value) => {
-                  selectDevices.filter = value;
-                  bluetooth.setSelectedAll(false);
+                  setFilter(value);
+                  setSelectedAll(false);
                 }}
                 trigger={(setAnchor) =>
                   render((event) => setAnchor(event.currentTarget))
@@ -98,7 +95,6 @@ export const SelectDevicesPage = () => {
         startButton: {
           text: "Rescan",
           onClick() {
-            bluetooth.clean();
             scanDevices.transition = false;
             app.page = AppPage.SCAN_DEVICES;
           },
@@ -106,44 +102,53 @@ export const SelectDevicesPage = () => {
         endButton: {
           text: "Connect",
           disabled: !selecteds.length,
-          onClick: () => (app.page = AppPage.CONNECT_DEVICES),
+          onClick() {
+            connectDevices.connecteds = [];
+            app.page = AppPage.CONNECT_DEVICES;
+          },
         },
       }}
     >
       <List>
-        {filtereds.map((device, index) => (
-          <ListItem
-            key={index}
-            selected={device.selected}
-            dense
-            disablePadding
-            divider
-            onClick={device.toggleSelected}
-          >
-            <ListItemButton sx={{ overflow: "hidden" }}>
-              <ListItemAvatar>
-                <Avatar>
-                  <UnpluginIcon
-                    raw={device.bms ? IconBattery10 : IconBluetooth}
-                  />
-                </Avatar>
-              </ListItemAvatar>
+        {filtereds.map((device) => {
+          const index = selecteds.findIndex(({ id }) => id === device.id);
+          const selected = index >= 0;
 
-              <ListItemText
-                primary={device.name}
-                secondary={device.id}
-                primaryTypographyProps={{ noWrap: true }}
-              />
+          return (
+            <ListItem
+              key={device.id}
+              selected={selected}
+              dense
+              disablePadding
+              divider
+              onClick={() => {
+                if (selected) selectDevices.selecteds.splice(index, 1);
+                else selectDevices.selecteds.push(device);
+              }}
+            >
+              <ListItemButton sx={{ overflow: "hidden" }}>
+                <ListItemAvatar>
+                  <Avatar>
+                    <UnpluginIcon
+                      raw={device.bms ? IconBattery10 : IconBluetooth}
+                    />
+                  </Avatar>
+                </ListItemAvatar>
 
-              <Checkbox
-                checked
-                sx={{
-                  visibility: device.selected ? "visible" : "hidden",
-                }}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
+                <ListItemText
+                  primary={device.name}
+                  secondary={device.id}
+                  primaryTypographyProps={{ noWrap: true }}
+                />
+
+                <Checkbox
+                  checked
+                  sx={{ visibility: selected ? "visible" : "hidden" }}
+                />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
       </List>
     </StepPage>
   );

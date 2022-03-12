@@ -9,9 +9,9 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { MouseEventHandler, ReactNode } from "react";
-import { useSnapshot } from "valtio";
-import { viewport } from "../utils/viewport";
+import { MouseEventHandler, ReactNode, useEffect, useState } from "react";
+import { proxy, useSnapshot } from "valtio";
+import { bottomDialog } from "./BottomDialog";
 import { LightButton } from "./LightButton";
 import { UnpluginIcon } from "./UnpluginIcon";
 import { ArrayLike } from "/src/utils/common";
@@ -45,17 +45,36 @@ export type PageProps = {
   children?: ReactNode;
 };
 
+const page = proxy({
+  height: innerHeight,
+});
+
+visualViewport.addEventListener("resize", () => {
+  page.height = visualViewport.height;
+});
+
 export const Page = ({
   transition = false,
   header = {},
   footer,
   children,
 }: PageProps) => {
-  const { windowHeight } = useSnapshot(viewport);
+  const { closed } = useSnapshot(bottomDialog);
+  const { height: pageHeight } = useSnapshot(page);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (closed) setHeight(pageHeight);
+  }, [closed, pageHeight]);
 
   return (
-    <Grow in appear={transition}>
-      <Stack width="100vw" height={`${windowHeight}px`} overflow="hidden">
+    <Grow in appear={transition} timeout={300}>
+      <Stack
+        width="100vw"
+        height={`${height}px`}
+        position="fixed"
+        overflow="hidden"
+      >
         <AppBar position="static" elevation={0} color="transparent">
           <Container maxWidth="md" disableGutters>
             <Toolbar variant="dense">

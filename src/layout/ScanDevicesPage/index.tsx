@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { proxy, useSnapshot } from "valtio";
 import IconBluetooth from "~icons/fluent/bluetooth-20-regular?raw";
 import IconBluetoothDisabled from "~icons/fluent/bluetooth-disabled-20-regular?raw";
@@ -6,6 +6,7 @@ import IconInfo from "~icons/fluent/info-20-regular?raw";
 import IconWarning from "~icons/fluent/warning-20-regular?raw";
 import { app, AppPage } from "../App";
 import { BluetoothDebugButton } from "../DebugButton";
+import { selectDevices } from "../SelectDevicesPage";
 import { settings } from "../SettingsPage";
 import { PageFooterButton, PageProps } from "/src/components/Page";
 import { ProgressPageContent } from "/src/components/ProgressPageContent";
@@ -20,22 +21,32 @@ export const scanDevices = proxy({
 
 export const ScanDevicesPage = () => {
   const { bluetoothStatus } = useSnapshot(settings);
-  const { scanning } = useSnapshot(bluetooth);
   const { transition } = useSnapshot(scanDevices);
-  const [attempt, setAttempt] = useState(0);
+  const [scanning, setScanning] = useState(Status.ACTIVE);
 
-  useAsyncEffect((active) => bluetooth.scanDevices(active), [attempt]);
+  useAsyncEffect(
+    async (unmounted) => {
+      if (scanning !== Status.ACTIVE) return;
 
-  useEffect(() => {
-    if (scanning === Status.SUCCESSFUL) app.page = AppPage.SELECT_DEVICES;
-  }, [scanning]);
+      try {
+        const devices = await bluetooth.scanDevices(unmounted);
+        if (unmounted()) return;
+
+        selectDevices.devices = devices;
+        selectDevices.selecteds = [];
+        app.page = AppPage.SELECT_DEVICES;
+      } catch (error) {
+        if (unmounted()) return;
+
+        setScanning(error as Status);
+      }
+    },
+    [scanning]
+  );
 
   const cancelButton: PageFooterButton = {
     text: "Cancel",
-    onClick() {
-      bluetooth.clean();
-      app.page = AppPage.HOME;
-    },
+    onClick: () => (app.page = AppPage.HOME),
   };
 
   const errorPageProps: PageProps = {
@@ -46,7 +57,7 @@ export const ScanDevicesPage = () => {
       startButton: cancelButton,
       endButton: {
         text: "Retry",
-        onClick: () => setAttempt((value) => ++value),
+        onClick: () => setScanning(Status.ACTIVE),
       },
     },
   };
@@ -78,12 +89,12 @@ export const ScanDevicesPage = () => {
         iconRaw={IconInfo}
       />
     </StepPage>
-  ) : scanning === Status.FAILED ? (
+  ) : (
     <StepPage headerText="Scan failed" {...errorPageProps}>
       <ProgressPageContent
         text="Unexpected error while scanning devices via Bluetooth."
         iconRaw={IconWarning}
       />
     </StepPage>
-  ) : null;
+  );
 };

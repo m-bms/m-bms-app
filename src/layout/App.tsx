@@ -9,6 +9,8 @@ import { SelectDevicesPage } from "./SelectDevicesPage";
 import { SelectNetworkPage } from "./SelectNetworkPage";
 import { settings, SettingsPage } from "./SettingsPage";
 
+// Keyboard.addListener("keyboardWillShow", () => alert("show"));
+
 export enum AppPage {
   HOME,
   SETTINGS,
@@ -31,7 +33,7 @@ export const appPageMap = {
 };
 
 export const app = proxy({
-  page: AppPage.SCAN_NETWORKS,
+  page: AppPage.SCAN_DEVICES,
 });
 
 export const App = () => {
