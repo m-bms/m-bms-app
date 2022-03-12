@@ -44,7 +44,7 @@ export const SelectDevicesPage = () => {
   );
 
   const setSelectedAll = (value: boolean) => {
-    selectDevices.selecteds = value ? [...devices] : [];
+    selectDevices.selecteds = value ? [...filtereds] : [];
   };
 
   return (
