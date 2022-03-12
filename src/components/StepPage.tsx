@@ -4,14 +4,14 @@ import { Page, PageProps } from "./Page";
 import { Scrollable } from "./Scrollable";
 
 export type StepPageProps = PageProps & {
-  headerText: string;
+  headerText?: string;
   headerDivider?: boolean;
   headerEnd?: ReactNode;
 };
 
 export const StepPage = (props: StepPageProps) => {
   return (
-    <Page {...props}>
+    <Page {...props} footer={props.footer ?? {}}>
       <Stack height={1}>
         <Box
           flex={1}
@@ -44,6 +44,7 @@ export const StepPage = (props: StepPageProps) => {
             <Box flex={1} position="relative" children={props.headerEnd} />
           </Container>
         </Box>
+
         <Box flex={8}>
           <Scrollable>
             <Container
@@ -57,6 +58,7 @@ export const StepPage = (props: StepPageProps) => {
             />
           </Scrollable>
         </Box>
+
         <Box flex={1} />
       </Stack>
     </Page>

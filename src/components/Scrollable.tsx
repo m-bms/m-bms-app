@@ -1,14 +1,15 @@
-import { styled } from "@mui/material";
+import { BoxProps, styled } from "@mui/material";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import "overlayscrollbars/css/OverlayScrollbars.css";
 import { ComponentType } from "react";
 
-export const Scrollable: ComponentType = styled((props) => (
+export const Scrollable: ComponentType<BoxProps> = styled((props) => (
   <OverlayScrollbarsComponent
     {...props}
     options={{
       scrollbars: {
         autoHide: "scroll",
+        autoHideDelay: 300,
       },
     }}
   />

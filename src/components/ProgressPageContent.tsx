@@ -21,7 +21,7 @@ export const ProgressPageContent = (props: {
         )}
       </Box>
 
-      <Stack flex={6} py={1} justifyContent="center">
+      <Stack flex={7} py={1} justifyContent="center">
         {props.iconRaw && (
           <UnpluginIcon
             raw={props.iconRaw}

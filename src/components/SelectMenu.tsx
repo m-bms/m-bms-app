@@ -15,7 +15,6 @@ export type SelectMenuProps<T extends string> = {
     value: T;
     text: string;
   }>;
-  rightOrigin?: boolean;
   onChange?(value: T): unknown;
   trigger(setAnchor: (anchor: HTMLElement) => void, text?: string): ReactNode;
 };

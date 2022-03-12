@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { proxy, useSnapshot } from "valtio";
-import IconBluetooth from "~icons/fluent/bluetooth-20-regular?raw";
-import IconBluetoothDisabled from "~icons/fluent/bluetooth-disabled-20-regular?raw";
 import IconInfo from "~icons/fluent/info-20-regular?raw";
 import IconWarning from "~icons/fluent/warning-20-regular?raw";
+import IconWifi1 from "~icons/fluent/wifi-1-20-regular?raw";
+import IconWifiOff from "~icons/fluent/wifi-off-20-regular?raw";
 import { app, AppPage } from "../App";
-import { BluetoothDebugButton } from "../DebugButton";
+import { WifiDebugButton } from "../DebugButton";
 import { settings } from "../SettingsPage";
 import { PageFooterButton, PageProps } from "/src/components/Page";
 import { ProgressPageContent } from "/src/components/ProgressPageContent";
@@ -13,34 +13,36 @@ import { StepPage } from "/src/components/StepPage";
 import { bluetooth } from "/src/utils/bluetooth";
 import { useAsyncEffect } from "/src/utils/react";
 import { Status } from "/src/utils/status";
+import { wifi } from "/src/utils/wifi";
 
-export const scanDevices = proxy({
+export const scanNetworks = proxy({
   transition: true,
 });
 
-export const ScanDevicesPage = () => {
-  const { bluetoothStatus } = useSnapshot(settings);
-  const { scanning } = useSnapshot(bluetooth);
-  const { transition } = useSnapshot(scanDevices);
+export const ScanNetworksPage = () => {
+  const { wifiStatus } = useSnapshot(settings);
+  const { scanning } = useSnapshot(wifi);
+  const { transition } = useSnapshot(scanNetworks);
   const [attempt, setAttempt] = useState(0);
 
-  useAsyncEffect((active) => bluetooth.scanDevices(active), [attempt]);
+  useAsyncEffect((unmounted) => wifi.scanNetworks(unmounted), [attempt]);
 
   useEffect(() => {
-    if (scanning === Status.SUCCESSFUL) app.page = AppPage.SELECT_DEVICES;
+    if (scanning === Status.SUCCESSFUL) app.page = AppPage.SELECT_NETWORK;
   }, [scanning]);
 
   const cancelButton: PageFooterButton = {
     text: "Cancel",
     onClick() {
       bluetooth.clean();
+      wifi.clean();
       app.page = AppPage.HOME;
     },
   };
 
   const errorPageProps: PageProps = {
     header: {
-      endButtons: BluetoothDebugButton(bluetoothStatus),
+      endButtons: WifiDebugButton(wifiStatus),
     },
     footer: {
       startButton: cancelButton,
@@ -54,34 +56,34 @@ export const ScanDevicesPage = () => {
   return scanning === Status.ACTIVE ? (
     <StepPage
       transition={transition}
-      headerText="Scanning devices"
+      headerText="Scanning networks"
       footer={{ startButton: cancelButton }}
     >
       <ProgressPageContent
         text="The app will connect to BMS devices via Bluetooth,
           then instructs them to join the desired WiFi network."
-        iconRaw={IconBluetooth}
+        iconRaw={IconWifi1}
         progress
       />
     </StepPage>
   ) : scanning === Status.NO_HARDWARE ? (
     <StepPage headerText="No Bluetooth" {...errorPageProps}>
       <ProgressPageContent
-        text="Hardware not found. Make sure Bluetooth is enabled."
-        iconRaw={IconBluetoothDisabled}
+        text="Hardware not found. Make sure WiFi is enabled."
+        iconRaw={IconWifiOff}
       />
     </StepPage>
-  ) : scanning === Status.NO_DEVICES ? (
+  ) : scanning === Status.NO_NETWORKS ? (
     <StepPage headerText="No devices" {...errorPageProps}>
       <ProgressPageContent
-        text="No availble devices found via Bluetooth."
+        text="No availble WiFi networks found."
         iconRaw={IconInfo}
       />
     </StepPage>
   ) : scanning === Status.FAILED ? (
     <StepPage headerText="Scan failed" {...errorPageProps}>
       <ProgressPageContent
-        text="Unexpected error while scanning devices via Bluetooth."
+        text="Unexpected error while scanning WiFi networks."
         iconRaw={IconWarning}
       />
     </StepPage>

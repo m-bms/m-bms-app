@@ -1,8 +1,8 @@
 import { memo } from "react";
 import { useSnapshot } from "valtio";
-import { ThemeMode } from "../../../components/ThemeModeProvider";
 import { settings } from "../index";
 import { SettingGroup, SettingType } from "../SettingGroup";
+import { ThemeMode } from "/src/components/ThemeModeProvider";
 
 export const AppGroup = memo(() => {
   const { themeMode } = useSnapshot(settings);
@@ -30,7 +30,7 @@ export const AppGroup = memo(() => {
           text: "Clear",
           onClick() {
             localStorage.clear();
-            settings.reset();
+            location.reload();
           },
         },
       ]}

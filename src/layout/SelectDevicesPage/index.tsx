@@ -7,7 +7,7 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useSnapshot } from "valtio";
 import IconBattery10 from "~icons/fluent/battery-10-24-regular?raw";
 import IconBluetooth from "~icons/fluent/bluetooth-24-regular?raw";
@@ -20,7 +20,7 @@ import { settings } from "../SettingsPage";
 import { SelectMenu } from "/src/components/SelectMenu";
 import { StepPage } from "/src/components/StepPage";
 import { UnpluginIcon } from "/src/components/UnpluginIcon";
-import { BlueToothDevice } from "/src/utils/bluetooth";
+import { bluetooth } from "/src/utils/bluetooth";
 import { proxyWithStorage } from "/src/utils/valtio";
 
 enum DeviceFilter {
@@ -28,35 +28,24 @@ enum DeviceFilter {
   ALL = "all",
 }
 
-export const selectDevices = proxyWithStorage(
-  "select-devices",
-  {
-    filter: DeviceFilter.BMS,
-    devices: [] as BlueToothDevice[],
-  },
-  ["filter"]
-);
+export const selectDevices = proxyWithStorage("select-devices", {
+  filter: DeviceFilter.BMS,
+});
 
 export const SelectDevicesPage = () => {
-  const { bluetoothError } = useSnapshot(settings);
-  const { filter, devices } = useSnapshot(selectDevices);
+  const { bluetoothStatus } = useSnapshot(settings);
+  const { filter } = useSnapshot(selectDevices);
+  const { devices } = useSnapshot(bluetooth);
 
-  const [filtereds, setFiltereds] = useState<
-    (BlueToothDevice & { selected?: boolean })[]
-  >([]);
+  const filtereds = useMemo(
+    () => devices.filter((device) => filter === DeviceFilter.ALL || device.bms),
+    [filter, devices]
+  );
 
   const selecteds = useMemo(
     () => filtereds.filter((device) => device.selected),
     [filtereds]
   );
-
-  useEffect(() => {
-    setFiltereds(
-      devices
-        .filter((device) => filter === DeviceFilter.ALL || device.bms)
-        .map((device) => ({ ...device }))
-    );
-  }, [filter]);
 
   return (
     <StepPage
@@ -70,32 +59,33 @@ export const SelectDevicesPage = () => {
             right: 16,
             bottom: -6,
           }}
-          onClick={() => {
-            const toggled = !selecteds.length;
-            filtereds.forEach((device) => (device.selected = toggled));
-            setFiltereds([...filtereds]);
-          }}
+          onClick={() => bluetooth.setSelectedAll(!selecteds.length)}
         />
       }
       header={{
         startButtons: {
           iconRaw: IconDismiss,
-          onClick: () => (app.page = AppPage.HOME),
+          onClick() {
+            bluetooth.clean();
+            app.page = AppPage.HOME;
+          },
         },
         endButtons: [
-          BluetoothDebugButton(bluetoothError),
+          BluetoothDebugButton(bluetoothStatus),
           {
             iconRaw: IconFilter,
             component: (key, render) => (
               <SelectMenu
                 key={key}
-                rightOrigin
                 value={filter}
                 options={[
                   { value: DeviceFilter.BMS, text: "Show only BMS" },
                   { value: DeviceFilter.ALL, text: "Show all devices" },
                 ]}
-                onChange={(value) => (selectDevices.filter = value)}
+                onChange={(value) => {
+                  selectDevices.filter = value;
+                  bluetooth.setSelectedAll(false);
+                }}
                 trigger={(setAnchor) =>
                   render((event) => setAnchor(event.currentTarget))
                 }
@@ -108,6 +98,7 @@ export const SelectDevicesPage = () => {
         startButton: {
           text: "Rescan",
           onClick() {
+            bluetooth.clean();
             scanDevices.transition = false;
             app.page = AppPage.SCAN_DEVICES;
           },
@@ -115,6 +106,7 @@ export const SelectDevicesPage = () => {
         endButton: {
           text: "Connect",
           disabled: !selecteds.length,
+          onClick: () => (app.page = AppPage.CONNECT_DEVICES),
         },
       }}
     >
@@ -126,10 +118,7 @@ export const SelectDevicesPage = () => {
             dense
             disablePadding
             divider
-            onClick={() => {
-              device.selected = !device.selected;
-              setFiltereds([...filtereds]);
-            }}
+            onClick={device.toggleSelected}
           >
             <ListItemButton sx={{ overflow: "hidden" }}>
               <ListItemAvatar>

@@ -14,8 +14,7 @@ import IconSettings from "~icons/fluent/settings-24-regular?raw";
 import { LightButton } from "../../components/LightButton";
 import { Page } from "../../components/Page";
 import { app, AppPage } from "../App";
-import { sleep } from "/src/utils/common";
-import { wifi } from "/src/utils/wifi";
+import { scanDevices } from "../ScanDevicesPage";
 
 export const SCAN_INTERVAL = 10000;
 
@@ -24,22 +23,23 @@ export const HomePage = () => {
   const [scanning, setScanning] = useState(true);
 
   useAsyncEffect((running) => {
-    const scan = async () => {
-      if (!running()) return;
-      setScanning(true);
-
-      const scanneds = await wifi.scanDevices(running);
-      if (!running()) return;
-
-      setDevices(scanneds);
-      setScanning(false);
-
-      await sleep(SCAN_INTERVAL);
-      scan();
-    };
-
-    scan();
+    // const scan = async () => {
+    //   if (!running()) return;
+    //   setScanning(true);
+    //   const scanneds = await wifi.scanDevices(running);
+    //   if (!running()) return;
+    //   setDevices(scanneds);
+    //   setScanning(false);
+    //   await sleep(SCAN_INTERVAL);
+    //   scan();
+    // };
+    // scan();
   }, []);
+
+  const addDevice = () => {
+    scanDevices.transition = true;
+    app.page = AppPage.SCAN_DEVICES;
+  };
 
   return (
     <Page
@@ -51,7 +51,7 @@ export const HomePage = () => {
         },
         endButtons: {
           iconRaw: IconAdd,
-          onClick: () => (app.page = AppPage.SCAN_DEVICES),
+          onClick: addDevice,
         },
       }}
     >

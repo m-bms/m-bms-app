@@ -2,11 +2,10 @@ import { memo } from "react";
 import { useSnapshot } from "valtio";
 import { settings } from "..";
 import { SettingGroup, SettingType } from "../SettingGroup";
-import { BluetoothError } from "/src/utils/bluetooth";
-import { WifiError } from "/src/utils/wifi";
+import { Status } from "/src/utils/status";
 
 export const DebugGroup = memo(() => {
-  const { bluetoothError, wifiError } = useSnapshot(settings);
+  const { bluetoothStatus, wifiStatus } = useSnapshot(settings);
 
   return (
     <SettingGroup
@@ -29,29 +28,29 @@ export const DebugGroup = memo(() => {
         {
           type: SettingType.SELECT,
           label: "Bluetooth",
-          value: bluetoothError,
+          value: bluetoothStatus,
           options: [
-            { value: BluetoothError.NO_ERRORS, text: "No errors" },
-            { value: BluetoothError.NO_HARDWARE, text: "No hardware" },
-            { value: BluetoothError.NO_DEVICES, text: "No devices" },
-            { value: BluetoothError.SCAN_FAILED, text: "Scan failed" },
+            { value: Status.SUCCESSFUL, text: "No errors" },
+            { value: Status.NO_HARDWARE, text: "No hardware" },
+            { value: Status.NO_DEVICES, text: "No devices" },
+            { value: Status.FAILED, text: "Scan failed" },
           ],
-          onChange(value: BluetoothError) {
-            settings.bluetoothError = value;
+          onChange(value: Status) {
+            settings.bluetoothStatus = value;
           },
         },
         {
           type: SettingType.SELECT,
           label: "WiFi",
-          value: wifiError,
+          value: wifiStatus,
           options: [
-            { value: WifiError.NO_ERRORS, text: "No errors" },
-            { value: WifiError.NO_HARDWARE, text: "No hardware" },
-            { value: WifiError.NO_NETWORKS, text: "No networks" },
-            { value: WifiError.SCAN_FAILED, text: "Scan failed" },
+            { value: Status.SUCCESSFUL, text: "No errors" },
+            { value: Status.NO_HARDWARE, text: "No hardware" },
+            { value: Status.NO_NETWORKS, text: "No networks" },
+            { value: Status.FAILED, text: "Scan failed" },
           ],
-          onChange(value: WifiError) {
-            settings.wifiError = value;
+          onChange(value: Status) {
+            settings.wifiStatus = value;
           },
         },
       ]}

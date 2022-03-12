@@ -7,14 +7,13 @@ import { InfoGroup } from "./setting-groups/InfoGroup";
 import { Page } from "/src/components/Page";
 import { Scrollable } from "/src/components/Scrollable";
 import { ThemeMode } from "/src/components/ThemeModeProvider";
-import { BluetoothError } from "/src/utils/bluetooth";
+import { Status } from "/src/utils/status";
 import { proxyWithStorage } from "/src/utils/valtio";
-import { WifiError } from "/src/utils/wifi";
 
 export const defaultSettings = {
   themeMode: ThemeMode.DARK,
-  bluetoothError: BluetoothError.NO_ERRORS,
-  wifiError: WifiError.NO_ERRORS,
+  bluetoothStatus: Status.SUCCESSFUL,
+  wifiStatus: Status.SUCCESSFUL,
 };
 
 export const settings = proxyWithStorage("settings", {
