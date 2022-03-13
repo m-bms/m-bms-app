@@ -1,10 +1,4 @@
-import {
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  PopoverOrigin,
-} from "@mui/material";
+import { ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { ReactNode, useMemo, useState } from "react";
 import IconCheckmark from "~icons/fluent/checkmark-24-regular?raw";
 import { UnpluginIcon } from "./UnpluginIcon";
@@ -21,6 +15,7 @@ export type SelectMenuProps<T extends string> = {
 
 export const SelectMenu = <T extends string>(props: SelectMenuProps<T>) => {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+
   const text = useMemo(
     () => props.options?.find((option) => option.value === props.value)?.text,
     [props.value]
@@ -28,19 +23,20 @@ export const SelectMenu = <T extends string>(props: SelectMenuProps<T>) => {
 
   const closeMenu = () => setAnchor(null);
 
-  const origin: PopoverOrigin = {
-    vertical: "top",
-    horizontal: "center",
-  };
-
   return (
     <>
       {props.trigger(setAnchor, text)}
 
       <Menu
         anchorEl={anchor}
-        anchorOrigin={origin}
-        transformOrigin={origin}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
         open={!!anchor}
         onClose={closeMenu}
         BackdropProps={{ invisible: false }}

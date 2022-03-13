@@ -1,5 +1,4 @@
 import { randFullName, randMac } from "@ngneat/falso";
-import { proxy } from "valtio";
 import { compareStrings, sleep } from "../common";
 import { Status } from "../status";
 import { WifiNetwork } from "./type";
@@ -8,7 +7,7 @@ import { settings } from "/src/layout/SettingsPage";
 export const MAX_DEVICE_COUNT = 10;
 export const WIFI_NETWORK_PASSWORD = "123456";
 
-export const fakeWifi = proxy({
+export const fakeWifi = {
   async scanNetworks(unmounted: () => boolean) {
     await sleep(2000);
     if (unmounted()) throw Status.INTERRUPTED;
@@ -25,4 +24,4 @@ export const fakeWifi = proxy({
     networks[0].current = true;
     return networks;
   },
-});
+};

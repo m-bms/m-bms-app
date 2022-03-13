@@ -1,4 +1,5 @@
 import "@fontsource/roboto";
+import "@fontsource/roboto-mono";
 import "overlayscrollbars/css/OverlayScrollbars.css";
 import ReactDOM from "react-dom";
 import "./index.css";

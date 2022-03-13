@@ -83,7 +83,7 @@ export const JoinDevicesPage = () => {
     <StepPage headerText="Successful" footer={pageFooter}>
       <ProgressList
         {...listProps}
-        text="Some of the devices failed to join WiFi network."
+        text="All devices successfully joined WiFi network."
       />
     </StepPage>
   );

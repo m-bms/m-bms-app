@@ -47,7 +47,7 @@ export const BottomDialog = (props: { children?: ReactNode }) => {
           m: 0,
           position: "fixed",
           bottom: 0,
-          borderRadius: 4,
+          borderRadius: 3,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
         },

@@ -1,7 +1,10 @@
 import IconBug from "~icons/fluent/bug-24-regular?raw";
+import { ActionMenu } from "../components/ActionMenu";
 import { PageHeaderButton } from "../components/Page";
 import { SelectMenu } from "../components/SelectMenu";
+import { createBmsDevice } from "../utils/bms";
 import { Status } from "../utils/status";
+import { home } from "./HomePage/state";
 import { settings } from "./SettingsPage";
 
 export const BluetoothDebugButton = (status: Status): PageHeaderButton => ({
@@ -59,6 +62,26 @@ export const WifiDebugButton = (status: Status): PageHeaderButton => ({
         },
       ]}
       onChange={(value) => (settings.wifiStatus = value)}
+      trigger={(setAnchor) => render((event) => setAnchor(event.currentTarget))}
+    />
+  ),
+});
+
+export const HomePageDebugButton = (): PageHeaderButton => ({
+  iconRaw: IconBug,
+  component: (key, render) => (
+    <ActionMenu
+      key={key}
+      actions={[
+        {
+          text: "Add 5 devices",
+          onClick() {
+            for (let i = 0; i < 5; ++i) {
+              home.devices.push(createBmsDevice());
+            }
+          },
+        },
+      ]}
       trigger={(setAnchor) => render((event) => setAnchor(event.currentTarget))}
     />
   ),

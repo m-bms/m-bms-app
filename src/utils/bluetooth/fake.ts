@@ -1,8 +1,10 @@
 import { randBoolean, randMac, randNumber, randVehicle } from "@ngneat/falso";
+import { createBmsDevice } from "../bms";
 import { compareStrings, sleep } from "../common";
 import { Status } from "../status";
 import { WIFI_NETWORK_PASSWORD } from "../wifi";
 import { BlueToothDevice } from "./type";
+import { home } from "/src/layout/HomePage/state";
 import { settings } from "/src/layout/SettingsPage";
 
 const NAME_BMS = "[BMS]";
@@ -32,7 +34,7 @@ export const fakeBluetooth = {
       .sort((a, b) => compareStrings(a.name, b.name));
   },
   async connectDevice(unmounted: () => boolean, device: BlueToothDevice) {
-    await sleep(randNumber({ min: 500, max: 2000 }));
+    await sleep(randNumber({ min: 500, max: 2500 }));
     if (unmounted()) throw Status.INTERRUPTED;
 
     if (!device.bms) throw Status.FAILED;
@@ -42,7 +44,7 @@ export const fakeBluetooth = {
     device: BlueToothDevice,
     password?: string
   ) {
-    await sleep(randNumber({ min: 500, max: 2000 }));
+    await sleep(randNumber({ min: 500, max: 2500 }));
     if (unmounted()) throw Status.INTERRUPTED;
 
     if (
@@ -50,5 +52,7 @@ export const fakeBluetooth = {
       password !== WIFI_NETWORK_PASSWORD
     )
       throw Status.FAILED;
+
+    home.devices.push(createBmsDevice(device.name));
   },
 };

@@ -15,8 +15,12 @@ export const Scrollable: ComponentType<BoxProps> = styled((props) => (
   />
 ))(({ theme }) => ({
   height: "100%",
-  ".os-scrollbar": {
+  ".os-scrollbar-vertical": {
     width: theme.spacing(0.5),
+    padding: 0,
+  },
+  ".os-scrollbar-horizontal": {
+    height: theme.spacing(0.5),
     padding: 0,
   },
   ".os-scrollbar-handle": {

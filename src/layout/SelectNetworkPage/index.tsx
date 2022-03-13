@@ -149,6 +149,7 @@ export const SelectNetworkPage = () => {
               <Button
                 variant="contained"
                 disabled={password.length < 6}
+                disableElevation
                 onClick={() => {
                   joinDevices.joineds = [];
                   app.page = AppPage.JOIN_DEVICES;
