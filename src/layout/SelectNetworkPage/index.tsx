@@ -39,8 +39,9 @@ export const selectNetwork = proxy({
 
 export const SelectNetworkPage = () => {
   const { wifiStatus } = useSnapshot(settings);
-  const { networks, selected, passwordDialog, passwordShow, password } =
+  const { networks, selected, passwordDialog, passwordShow } =
     useSnapshot(selectNetwork);
+  const { password } = useSnapshot(selectNetwork, { sync: true });
 
   useEffect(() => {
     setBottomDialog(passwordDialog);
