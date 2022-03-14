@@ -7,7 +7,9 @@
     "dev:web": "vite --host",
     "dev:android": "run-s -c build:web \"dev:cap add android\" \"dev:cap run android\"",
     "dev:cap": "cross-env NODE_ENV=dev cap",
-    "build:web": "vite build"
+    "build:web": "vite build",
+    "check:type": "tsc --noEmit",
+    "check:format": "prettier . -c"
   },
   "dependencies": {
     "@capacitor-community/bluetooth-le": "^1.8.0",
