@@ -84,7 +84,6 @@ export const SettingGroup = (props: SettingGroupProps) => {
             <SelectMenu
               value={item.value}
               options={item.options}
-              rightOrigin
               onChange={item.onChange}
               trigger={(setAnchor, text) => (
                 <Button

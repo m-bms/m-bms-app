@@ -1,5 +1,4 @@
 import { Stack, Typography } from "@mui/material";
-import { useAsyncEffect } from "use-async-effect";
 import { useSnapshot } from "valtio";
 import IconAdd from "~icons/fluent/add-24-regular?raw";
 import IconContactCard from "~icons/fluent/contact-card-24-regular?raw";
@@ -19,20 +18,6 @@ export const SCAN_INTERVAL = 10000;
 
 export const HomePage = () => {
   const { devices, viewType } = useSnapshot(home);
-
-  useAsyncEffect((running) => {
-    // const scan = async () => {
-    //   if (!running()) return;
-    //   setScanning(true);
-    //   const scanneds = await wifi.scanDevices(running);
-    //   if (!running()) return;
-    //   setDevices(scanneds);
-    //   setScanning(false);
-    //   await sleep(SCAN_INTERVAL);
-    //   scan();
-    // };
-    // scan();
-  }, []);
 
   const addDevice = () => {
     scanDevices.transition = true;
