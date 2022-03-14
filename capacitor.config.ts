@@ -12,10 +12,10 @@ const config: CapacitorConfig = {
 };
 
 if (DEV) {
-  const ipAddress = process.env.IP_ADDR || ip.address();
+  const url = process.env.URL || `${ip.address()}:${VITE_PORT}`;
 
   config.server = {
-    url: `${ipAddress}:${VITE_PORT}`,
+    url,
     cleartext: true,
   };
 }
