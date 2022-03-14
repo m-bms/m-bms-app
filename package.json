@@ -4,7 +4,12 @@
   "version": "0.0.0",
   "scripts": {
     "prepare": "husky install",
-    "dev:web": "vite --host"
+    "dev:web": "vite --host",
+    "dev:android": "run-s -c build:web \"dev:cap add android\" \"dev:cap run android\"",
+    "dev:cap": "cross-env NODE_ENV=dev cap",
+    "build:web": "vite build",
+    "check:type": "tsc --noEmit",
+    "check:format": "prettier . -c"
   },
   "dependencies": {
     "@capacitor-community/bluetooth-le": "^1.8.0",
@@ -35,11 +40,15 @@
     "@iconify-json/mdi": "^1.1.0",
     "@svgr/core": "^6.2.1",
     "@types/color": "^3.0.3",
+    "@types/ip": "^1.1.0",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "@vitejs/plugin-react": "^1.2.0",
+    "cross-env": "^7.0.3",
     "husky": "^7.0.4",
+    "ip": "^1.1.5",
     "npm-check-updates": "^12.5.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.5.1",
     "prettier-plugin-organize-imports": "^2.3.4",
     "pretty-quick": "^3.1.3",
