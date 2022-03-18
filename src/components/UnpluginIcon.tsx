@@ -5,8 +5,8 @@ export const UnpluginIcon = (props: SvgIconProps & { raw?: string }) => {
   const { raw = "", ...rest } = props;
 
   const [viewBox, d] = useMemo(() => {
-    const viewBox = raw.match(/(?<=viewBox=").+?(?=")/)?.[0];
-    const d = raw.match(/(?<=d=").+?(?=")/)?.[0];
+    const viewBox = raw.match(/viewBox="(.+?)"/)?.[1];
+    const d = raw.match(/d="(.+?)"/)?.[1];
 
     return [viewBox, d];
   }, [raw]);
